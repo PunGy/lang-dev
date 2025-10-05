@@ -1,14 +1,17 @@
 import * as Token from './tokens'
 
 const whitespace = ' '
+const newline = '\n'
 
 export function lexer(code: string): Array<Token.Token> {
   const tokens: Array<Token.Token> = []
 
   let i = 0
+  let line = 0
 
   const charCount = code.length
   const peek = () => code[i]
+  const prev = () => code[i - 1]
   const consume = () => code[i++]
   const isAtEnd = () => i === charCount
 
@@ -23,6 +26,15 @@ export function lexer(code: string): Array<Token.Token> {
     }
   }
 
+  const isWord = () => {
+    switch (peek()) {
+      case whitespace:
+      case newline:
+        return false
+      default:
+        return true
+    }
+  }
   const readNum = () => {
     let strNum = ''
     while (isNum() && !isAtEnd()) {
@@ -33,16 +45,42 @@ export function lexer(code: string): Array<Token.Token> {
   }
   const readWord = () => {
     let word = ''
-    while (peek() !== whitespace && !isAtEnd()) {
+    while (isWord() && !isAtEnd()) {
       word += consume()
     }
     tokens.push(Token.makeWord(word))
   }
+  const readString = () => {
+    consume()
+    let value = ''
+    while (true) {
+      if (isAtEnd()) {
+        throw new Error(`Unterminated at the end of the file`)
+      }
+      if (peek() === '"') {
+        consume()
+        break
+      }
+      value += consume()
+    }
+    tokens.push(Token.makeString(value))
+  }
   const readComment = () => {
     consume()
-    while (peek() !== ')' && !isAtEnd()) {
-      consume()
+    let comment = ''
+    while (!isAtEnd()) {
+      if (peek() === ')') {
+        consume()
+        break
+      }
+      comment += consume()
     }
+    tokens.push(Token.makeComment(comment))
+  }
+  const readNewline = () => {
+    consume()
+    line++
+    tokens.push(Token.makeNewline())
   }
 
   while (!isAtEnd()) {
@@ -55,8 +93,14 @@ export function lexer(code: string): Array<Token.Token> {
       case whitespace:
         consume()
         break
+      case newline:
+        readNewline()
+        break
       case '(':
         readComment()
+        break
+      case '"':
+        readString()
         break
       default:
         readWord()

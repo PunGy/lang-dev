@@ -12,8 +12,15 @@ editor.onChange(content => {
 })
 
 function process(code: string) {
-  const tokens = lexer(code)
-
-  output.print(tokens.map(token => Token.print(token)).toString())
+  try {
+    const tokens = lexer(code)
+    output.print(tokens.map(token => Token.print(token)).toString())
+  } catch(err) {
+    if (err instanceof Error) {
+      output.print(err.toString())
+    } else {
+      output.print(`Unknown error: ${err}`)
+    }
+  }
 }
 
