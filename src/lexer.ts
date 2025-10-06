@@ -51,7 +51,7 @@ export function lexer(code: string): Array<Token.Token> {
     } else if (word === 'false') {
       tokens.push(Token.makeBool(false))
     } else {
-      tokens.push(Token.makeWord(word))
+      tokens.push(Token.makeWord(word.toUpperCase()))
     }
   }
   const readString = () => {

@@ -3,7 +3,7 @@ import * as Machine from './machine'
 
 type Token = Token.Token
 
-export function compute(tokens: Array<Token>): Token {
+export function compute(tokens: Array<Token>): void {
   let i = 0
   const count = tokens.length
 
@@ -26,7 +26,7 @@ export function compute(tokens: Array<Token>): Token {
 
     const innerFn = userWordMap.get(wordToken.word)
     if (innerFn) {
-      Machine.push(compute(innerFn))
+      compute(innerFn)
       return;
     }
 
@@ -46,13 +46,6 @@ export function compute(tokens: Array<Token>): Token {
         break
     }
   }
-
-  const result = Machine.peek()
-  if (result === undefined) {
-    throw new Error('stack is empty!!!')
-  }
-
-  return result
 }
 
 compute.prepare = () => {

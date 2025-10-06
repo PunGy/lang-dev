@@ -20,8 +20,7 @@ function process(code: string) {
     output.print("\n\n --- COMPUTATION --- \n\n")
 
     compute.prepare()
-    const result = compute(tokens)
-    output.print(Token.print(result))
+    compute(tokens)
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())
