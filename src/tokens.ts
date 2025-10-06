@@ -33,6 +33,14 @@ export interface String extends BaseToken {
 export const makeString = (value: string): String =>
   ({ type: tstr, value })
 
+export const tbool = Symbol('boolean')
+export interface Bool extends BaseToken {
+  type: typeof tbool;
+  value: boolean;
+}
+export const makeBool = (value: boolean): Bool =>
+  ({ type: tbool, value })
+
 export const tcomment = Symbol('comment')
 export interface Comment extends BaseToken {
   type: typeof tcomment;
@@ -41,13 +49,15 @@ export interface Comment extends BaseToken {
 export const makeComment = (comment: string): Comment =>
   ({ type: tcomment, comment })
 
-export type Token = Word | Number | String | Comment | Newline
+export type Literal = Number | String | Bool
+export type Token = Word | Number | String | Bool | Comment | Newline
 
-export const print = (token: Token) => {
+export const print = (token: Token): string => {
   switch (token.type) {
     case tword: return `[WORD: "${token.word}"]`
     case tnewline: return `[NEWLINE]`
-    case tnum: return `[NUMBER: "${token.num}"]`
+    case tbool: return `[BOOL: ${token.value}]`
+    case tnum: return `[NUMBER: ${token.num}]`
     case tstr: return `[STRING: "${token.value}"]`
     case tcomment: return `[COMMENT: "${token.comment}"]`
   }

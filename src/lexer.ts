@@ -16,14 +16,11 @@ export function lexer(code: string): Array<Token.Token> {
   const isAtEnd = () => i === charCount
 
   const isNum = () => {
-    switch (peek()) {
-      case '0': case '1': case '2': case '3':
-      case '4': case '5': case '6':
-      case '7': case '8': case '9':
-        return true
-      default:
-        return false
-    }
+    const char = peek()
+    if (char === undefined) return false;
+    const code = char.charCodeAt(0);
+    // 0-9
+    return code >= 48 && code <= 57
   }
 
   const isWord = () => {
@@ -48,7 +45,13 @@ export function lexer(code: string): Array<Token.Token> {
     while (isWord() && !isAtEnd()) {
       word += consume()
     }
-    tokens.push(Token.makeWord(word))
+    if (word === 'true') {
+      tokens.push(Token.makeBool(true))
+    } else if (word === 'false') {
+      tokens.push(Token.makeBool(false))
+    } else {
+      tokens.push(Token.makeWord(word))
+    }
   }
   const readString = () => {
     consume()
@@ -67,11 +70,17 @@ export function lexer(code: string): Array<Token.Token> {
   }
   const readComment = () => {
     consume()
+    let lvl = 0
     let comment = ''
     while (!isAtEnd()) {
       if (peek() === ')') {
-        consume()
-        break
+        if (lvl === 0) {
+          consume()
+          break
+        }
+        lvl--
+      } else if (peek() === '(') {
+        lvl++
       }
       comment += consume()
     }
@@ -85,9 +94,10 @@ export function lexer(code: string): Array<Token.Token> {
 
   while (!isAtEnd()) {
     switch (peek()) {
-      case '0': case '1': case '2': case '3':
+      case '1': case '2': case '3':
       case '4': case '5': case '6':
       case '7': case '8': case '9':
+                case '0':
         readNum()
         break
       case whitespace:

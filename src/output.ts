@@ -1,5 +1,7 @@
 export interface Output {
+  clear(): void;
   print(content: string): void;
+  println(content: string): void;
 }
 export const initOutput = (): Output => {
   const outputElem = document.getElementById('output')
@@ -9,8 +11,16 @@ export const initOutput = (): Output => {
   }
 
   return {
+    clear() {
+      outputElem.innerText = ''
+    },
     print(content) {
-      return outputElem.innerText = content
-    }
+      return outputElem.innerText += content
+    },
+    println(content) {
+      return this.print(content + '\n')
+    },
   }
 }
+
+export const output = initOutput()

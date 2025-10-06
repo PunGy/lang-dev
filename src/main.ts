@@ -1,11 +1,11 @@
 import { initEditor } from './editor'
 import { lexer } from './lexer'
-import { initOutput } from './output'
+import { output } from './output'
 import * as Token from './tokens'
 import './style.css'
+import { compute } from './machine'
 
 const editor = initEditor()
-const output = initOutput()
 
 editor.onChange(content => {
   process(content)
@@ -14,7 +14,14 @@ editor.onChange(content => {
 function process(code: string) {
   try {
     const tokens = lexer(code)
+
+    output.clear()
     output.print(tokens.map(token => Token.print(token)).toString())
+    output.print("\n\n --- COMPUTATION --- \n\n")
+
+    compute.prepare()
+    const result = compute(tokens)
+    output.print(Token.print(result))
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())
