@@ -1,5 +1,6 @@
 import * as Token from './tokens'
 import * as Machine from './machine'
+import { wordMap } from './systemWords/words'
 
 type Token = Token.Token
 
@@ -18,7 +19,7 @@ export function compute(tokens: Array<Token>): void {
     Machine.push(literal)
   }
   const processWord = (wordToken: Token.Word) => {
-    const processFn = Machine.wordMap.get(wordToken.word)
+    const processFn = wordMap.get(wordToken.word)
     if (processFn) {
       processFn()
       return;

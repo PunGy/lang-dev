@@ -20,10 +20,10 @@ export const makeNewline = (): Newline =>
 export const tnum = Symbol('number')
 export interface Number extends BaseToken {
   type: typeof tnum;
-  num: number;
+  value: number;
 }
-export const makeNumber = (num: number): Number =>
-  ({ type: tnum, num })
+export const makeNumber = (value: number): Number =>
+  ({ type: tnum, value })
 
 export const tstr = Symbol('string')
 export interface String extends BaseToken {
@@ -50,6 +50,22 @@ export const makeComment = (comment: string): Comment =>
   ({ type: tcomment, comment })
 
 export type Literal = Number | String | Bool
+export type LiteralType = Literal['type']
+export type LiteralType2Value = {
+  [T in Literal as T['type']]: T['value']
+}
+export type LiteralType2Token = {
+  [T in Literal as T['type']]: T
+}
+
+export const printType = (t: LiteralType) => {
+  switch (t) {
+    case tnum: return 'num'
+    case tstr: return 'str'
+    case tbool: return 'bool'
+  }
+}
+
 export type Token = Word | Number | String | Bool | Comment | Newline
 
 export const print = (token: Token): string => {
@@ -57,7 +73,7 @@ export const print = (token: Token): string => {
     case tword: return `[WORD: "${token.word}"]`
     case tnewline: return `[NEWLINE]`
     case tbool: return `[BOOL: ${token.value}]`
-    case tnum: return `[NUMBER: ${token.num}]`
+    case tnum: return `[NUMBER: ${token.value}]`
     case tstr: return `[STRING: "${token.value}"]`
     case tcomment: return `[COMMENT: "${token.comment}"]`
   }
