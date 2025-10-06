@@ -3,7 +3,7 @@ import { lexer } from './lexer'
 import { output } from './output'
 import * as Token from './tokens'
 import './style.css'
-import { compute } from './machine'
+import { compute } from './compute'
 
 const editor = initEditor()
 

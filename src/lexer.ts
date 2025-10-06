@@ -12,6 +12,7 @@ export function lexer(code: string): Array<Token.Token> {
   const charCount = code.length
   const peek = () => code[i]
   const prev = () => code[i - 1]
+  const skip = () => i++
   const consume = () => code[i++]
   const isAtEnd = () => i === charCount
 
@@ -54,14 +55,14 @@ export function lexer(code: string): Array<Token.Token> {
     }
   }
   const readString = () => {
-    consume()
+    skip()
     let value = ''
     while (true) {
       if (isAtEnd()) {
         throw new Error(`Unterminated at the end of the file`)
       }
       if (peek() === '"') {
-        consume()
+        skip()
         break
       }
       value += consume()
@@ -69,13 +70,13 @@ export function lexer(code: string): Array<Token.Token> {
     tokens.push(Token.makeString(value))
   }
   const readComment = () => {
-    consume()
+    skip()
     let lvl = 0
     let comment = ''
     while (!isAtEnd()) {
       if (peek() === ')') {
         if (lvl === 0) {
-          consume()
+          skip()
           break
         }
         lvl--
@@ -87,7 +88,7 @@ export function lexer(code: string): Array<Token.Token> {
     tokens.push(Token.makeComment(comment))
   }
   const readNewline = () => {
-    consume()
+    skip()
     line++
     tokens.push(Token.makeNewline())
   }
@@ -101,7 +102,7 @@ export function lexer(code: string): Array<Token.Token> {
         readNum()
         break
       case whitespace:
-        consume()
+        skip()
         break
       case newline:
         readNewline()
