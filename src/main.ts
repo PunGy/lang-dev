@@ -19,17 +19,17 @@ if (editor.content !== '') {
 }
 
 function process(code: string) {
+  output.clear()
+
   try {
     const tokens = lexer(code)
 
-    output.clear()
     // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
     output.print("--- COMPUTATION ---\n\n")
 
     const computer = new Computer(tokens)
     Machine.clear()
     computer.run()
-    output.flush()
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())
@@ -37,5 +37,7 @@ function process(code: string) {
       output.print(`Unknown error: ${err}`)
     }
   }
+
+  output.flush()
 }
 
