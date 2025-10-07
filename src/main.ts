@@ -12,6 +12,11 @@ editor.onChange(content => {
   process(content)
 })
 
+editor.restore()
+if (editor.content !== '') {
+  process(editor.content)
+}
+
 function process(code: string) {
   try {
     const tokens = lexer(code)
