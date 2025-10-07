@@ -8,12 +8,13 @@ Try here: https://lang-dev.pungy.me
 
 Example of following code execution:
 
-```forth
-: max (n1 n2 -- max)
-  over over (n1 n2 n1 n2)
-  = if   drop (they are equal)
+```text
+(n1 n2 -- max)
+: max
+  over over               (n1 n2 n1 n2)
+  = if   drop             (they are equal)
     else over over
-         > if drop (n1 is greater)
+         > if drop        (n1 is greater)
            else swap drop (n2 is greater)
            then
     then
