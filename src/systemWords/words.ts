@@ -2,9 +2,10 @@ import * as Numeric from './number'
 import * as Stack from './stack'
 import * as Print from './print'
 
-/**********************
-  * System functions: *
-  *********************/
+/****************************
+  * System words            *
+  * Only for literal tokens *
+  ***************************/
 
 export const wordMap = new Map<string, () => void>()
 wordMap.set('+', Numeric.plus)

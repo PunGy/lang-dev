@@ -2,8 +2,9 @@ import { initEditor } from './editor'
 import { lexer } from './lexer'
 import { output } from './output'
 import * as Token from './tokens'
+import * as Machine from './machine'
 import './style.css'
-import { compute } from './compute'
+import { Computer } from './compute'
 
 const editor = initEditor()
 
@@ -19,8 +20,9 @@ function process(code: string) {
     output.print(tokens.map(token => Token.print(token)).toString())
     output.print("\n\n --- COMPUTATION --- \n\n")
 
-    compute.prepare()
-    compute(tokens)
+    const computer = new Computer(tokens)
+    Machine.clear()
+    computer.compute()
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())

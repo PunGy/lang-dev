@@ -9,8 +9,8 @@ export const plus = makePureFn(
   '+',
   [Token.tnum, Token.tnum],
   Token.tnum,
-  ([a, b]) => a + b,
-  ([a, b]) => `${a} + ${b}`,
+  ([b, a]) => a + b,
+  ([b, a]) => `${a} + ${b}`,
   'plus',
 )
 
@@ -19,8 +19,8 @@ export const minus = makePureFn(
   '-',
   [Token.tnum, Token.tnum],
   Token.tnum,
-  ([a, b]) => a - b,
-  ([a, b]) => `${a} - ${b}`,
+  ([b, a]) => a - b,
+  ([b, a]) => `${a} - ${b}`,
   'minus',
 )
 
@@ -29,8 +29,8 @@ export const mul = makePureFn(
   '*',
   [Token.tnum, Token.tnum],
   Token.tnum,
-  ([a, b]) => a * b,
-  ([a, b]) => `${a} * ${b}`,
+  ([b, a]) => a * b,
+  ([b, a]) => `${a} * ${b}`,
   'multiply',
 )
 
@@ -39,8 +39,8 @@ export const div = makePureFn(
   '/',
   [Token.tnum, Token.tnum],
   Token.tnum,
-  ([a, b]) => a / b,
-  ([a, b]) => `${a} / ${b}`,
+  ([b, a]) => a / b,
+  ([b, a]) => `${a} / ${b}`,
   'divide',
 )
 
@@ -49,8 +49,8 @@ export const eq = makePureFn(
   '=',
   [Token.tnum, Token.tnum],
   Token.tbool,
-  ([a, b]) => a === b,
-  ([a, b]) => `${a} = ${b}`,
+  ([b, a]) => a === b,
+  ([b, a]) => `${a} = ${b}`,
   'equals',
 )
 
@@ -59,8 +59,8 @@ export const gt = makePureFn(
   '>',
   [Token.tnum, Token.tnum],
   Token.tbool,
-  ([a, b]) => b > a,
-  ([a, b]) => `${b} > ${a}`,
+  ([b, a]) => a > b,
+  ([b, a]) => `${a} > ${b}`,
   'greater',
 )
 
@@ -69,7 +69,7 @@ export const lt = makePureFn(
   '<',
   [Token.tnum, Token.tnum],
   Token.tbool,
-  ([a, b]) => b < a,
-  ([a, b]) => `${b} < ${a}`,
+  ([b, a]) => a < b,
+  ([b, a]) => `${b} < ${a}`,
   'less',
 )
