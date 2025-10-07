@@ -13,6 +13,30 @@ export function initEditor(): Editor {
     throw new Error('No editor in the application!')
   }
 
+  editorElem.addEventListener('keydown', (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'Tab':
+        e.preventDefault();
+        document.execCommand('insertText', false, '  ')
+        break
+      case 'Enter': {
+        e.preventDefault()
+        const selection = window.getSelection()
+        if (!selection?.rangeCount) return
+
+        const range = selection.getRangeAt(0)
+        const textBeforeCursor = range.startContainer.textContent?.substring(0, range.startOffset) ?? ''
+        const currentLine = textBeforeCursor.split('\n').pop() ?? ''
+
+        const indentationMatch = currentLine.match(/^[\s\t]*/)
+        const indentation = indentationMatch ? indentationMatch[0] : ''
+
+        document.execCommand('insertText', false, '\n' + indentation)
+        break
+      }
+    }
+  });
+
   const editor: Editor = {
     get content() {
       return getContent()

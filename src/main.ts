@@ -7,6 +7,7 @@ import './style.css'
 import { Computer } from './compute'
 
 const editor = initEditor()
+Machine.init()
 
 editor.onChange(content => {
   process(content)
@@ -27,7 +28,7 @@ function process(code: string) {
 
     const computer = new Computer(tokens)
     Machine.clear()
-    computer.compute()
+    computer.run()
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())

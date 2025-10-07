@@ -71,3 +71,55 @@ export function IF(computer: Computer) {
     }
   }
 }
+
+export function beginLoop(computer: Computer) {
+  let loopsCount = 0;
+  let terminated = false
+
+  const tokens: Array<Token> = []
+
+  const tokenLoop = () => {
+    loopsCount++;
+    if (loopsCount > 100_000) {
+      throw new Error('100_000 iterations of the loop... Seems like unterminated infinite loop')
+    }
+    while (!computer.isAtEnd()) {
+      // peek, because we don't need to skip "until" word
+      const tok = computer.peek()!
+
+      if (tok.type === Token.tword && tok.word === 'UNTIL') {
+        terminated = true
+        return
+      }
+      if (!terminated) {
+        tokens.push(tok)
+      }
+      computer.skip()
+      computer.execute(tok)
+    }
+  }
+  tokenLoop()
+
+  if (!terminated) {
+    throw new Error('Unterminated loop! Insert UNTIL')
+  }
+
+  let flag: boolean
+  while (true) {
+    const flagTok = Machine.pop()
+
+    if (flagTok === undefined || flagTok.type !== Token.tbool) {
+      throw new Error(`UNTIL: (bool) must be on top of the stack!`)
+    }
+
+    flag = flagTok.value
+
+    if (!flag) {
+      computer.pushTokens(tokens)
+      tokenLoop()
+    } else {
+      computer.skip() // skip "UNTIL"
+      break
+    }
+  }
+}

@@ -6,6 +6,8 @@ import { metaWordMap } from './wordMap'
   * Meta words registration
   */
 
-metaWordMap.set('IF', Branch.IF)
-metaWordMap.set(':', Environment.newWord)
-
+export function initMetaWords() {
+  metaWordMap.set('IF', Branch.IF)
+  metaWordMap.set('BEGIN', Branch.beginLoop)
+  metaWordMap.set(':', Environment.newWord)
+}

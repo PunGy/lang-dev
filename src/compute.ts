@@ -18,7 +18,7 @@ export class Computer {
   }
 
   peek() {
-    return this.tokens[0]
+    return this.tokens[this.tokens.length - 1]
   }
   consume() {
     return this.tokens.pop()
@@ -54,19 +54,23 @@ export class Computer {
     throw new Error(`Unknown word: ${wordToken.word}`)
   }
 
-  compute() {
+  run() {
     while (!this.isAtEnd()) {
       const token = this.consume()!
-      switch (token.type) {
-        case Token.tnum:
-        case Token.tbool:
-        case Token.tstr:
-          this.pushLiteral(token)
-          break
-        case Token.tword:
-          this.processWord(token)
-          break
-      }
+      this.execute(token)
+    }
+  }
+
+  execute(token: Token) {
+    switch (token.type) {
+      case Token.tnum:
+      case Token.tbool:
+      case Token.tstr:
+        this.pushLiteral(token)
+        break
+      case Token.tword:
+        this.processWord(token)
+        break
     }
   }
 }

@@ -1,5 +1,7 @@
 import * as Token from './tokens'
 import { output } from './output'
+import { initMetaWords } from './metaWords/words'
+import { initSystemWords } from './systemWords/words'
 
 type Token = Token.Literal
 
@@ -30,4 +32,9 @@ export const pop = (): Token | undefined => {
 
 export const length = () => stack.length
 export const isEmpty = () => stack.length === 0
+
+export function init() {
+  initMetaWords()
+  initSystemWords()
+}
 
