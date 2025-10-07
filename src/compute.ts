@@ -71,7 +71,6 @@ export class Computer {
 
   compute() {
     while (!this.isAtEnd()) {
-      console.log()
       const token = this.consume()!
       switch (token.type) {
         case Token.tnum:

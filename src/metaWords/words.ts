@@ -10,6 +10,11 @@ import * as Token from '../tokens'
 
 type Token = Token.Token
 
+export const metaWordMap = new Map<string, (computer: Computer) => void>()
+
+metaWordMap.set('IF', onIF)
+metaWordMap.set(':', newWord)
+
 function onIF(computer: Computer) {
   let lvl = 0
   let terminated = false
@@ -77,8 +82,45 @@ function onIF(computer: Computer) {
   }
 }
 
-export const metaWordMap = new Map<string, (computer: Computer) => void>()
+function newWord(computer: Computer) {
+  let lvl = 0
+  let terminated = false
+  const tokens: Array<Token> = []
 
-metaWordMap.set('IF', onIF)
+  const word = computer.consume()
+  if (word === undefined) {
+    throw new Error('Unterminated word registration!')
+  }
+  if (word.type !== Token.tword) {
+    throw new Error(`Cannot declare word name with ${Token.print(word)}`)
+  }
 
+  tokenLoop: while (!computer.isAtEnd()) {
+    const tok = computer.consume()!
+
+    if (tok.type === Token.tword) {
+      switch (tok.word) {
+        case ':':
+          lvl++;
+          break
+        case ';':
+          if (lvl === 0) {
+            terminated = true
+            break tokenLoop
+          } else {
+            lvl--
+          }
+          break
+      }
+    }
+    tokens.push(tok)
+  }
+  if (lvl > 0 || !terminated) {
+    throw new Error(`Unterminated word registration!`)
+  }
+
+  metaWordMap.set(word.word, () => {
+    computer.pushTokens(tokens)
+  })
+}
 
