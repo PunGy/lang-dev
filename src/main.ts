@@ -29,6 +29,7 @@ function process(code: string) {
     const computer = new Computer(tokens)
     Machine.clear()
     computer.run()
+    output.flush()
   } catch(err) {
     if (err instanceof Error) {
       output.print(err.toString())

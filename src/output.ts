@@ -2,6 +2,7 @@ export interface Output {
   clear(): void;
   print(content: string): void;
   println(content: string): void;
+  flush(): void;
 }
 export const initOutput = (): Output => {
   const outputElem = document.getElementById('output')
@@ -10,15 +11,21 @@ export const initOutput = (): Output => {
     throw new Error('No output in the application!')
   }
 
+  let buffer = ''
   return {
     clear() {
       outputElem.innerText = ''
+      buffer = ''
     },
     print(content) {
-      return outputElem.innerText += content
+      return buffer += content
     },
     println(content) {
       return this.print(content + '\n')
+    },
+    flush() {
+      outputElem.innerText = buffer
+      buffer = ''
     },
   }
 }
