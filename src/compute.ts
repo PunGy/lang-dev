@@ -1,7 +1,7 @@
 import * as Token from './tokens'
 import * as Machine from './machine'
-import { wordMap } from './systemWords/words'
-import { metaWordMap } from './metaWords/words'
+import { wordMap } from './systemWords/wordMap'
+import { metaWordMap } from './metaWords/wordMap'
 
 type Token = Token.Token
 

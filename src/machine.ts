@@ -1,8 +1,12 @@
 import * as Token from './tokens'
 import { output } from './output'
 
-type Token = Token.Token
+type Token = Token.Literal
 
+/****************************
+  * System stack            *
+  * Only for literal tokens *
+  ***************************/
 const stack: Array<Token> = []
 
 export const clear = () => {

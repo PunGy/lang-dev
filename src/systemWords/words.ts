@@ -2,13 +2,8 @@ import * as Numeric from './number'
 import * as Stack from './stack'
 import * as Print from './print'
 import * as Bool from './bool'
+import { wordMap } from './wordMap'
 
-/****************************
-  * System words            *
-  * Only for literal tokens *
-  ***************************/
-
-export const wordMap = new Map<string, () => void>()
 wordMap.set('+', Numeric.plus)
 wordMap.set('-', Numeric.minus)
 wordMap.set('*', Numeric.mul)
