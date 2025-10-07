@@ -2,7 +2,6 @@ import * as Token from './tokens'
 import * as Machine from './machine'
 import { wordMap } from './systemWords/words'
 import { metaWordMap } from './metaWords/words'
-import { output } from './output'
 
 type Token = Token.Token
 
@@ -31,18 +30,10 @@ export class Computer {
     return this.tokens.length === 0
   }
   pushTokens(tokens: Array<Token>) {
-    output.print('PUSH_TOKENS: (')
     for (let i = tokens.length - 1; i > -1; i--) {
       const tok = tokens[i]!
-
-      output.print(Token.print(tok))
-      if (i > 0) {
-        output.print(', ')
-      }
-
       this.tokens.push(tok)
     }
-    output.println(')')
   }
   pushLiteral(literal: Token.Literal) {
     Machine.push(literal)
@@ -59,12 +50,6 @@ export class Computer {
       metaFn(this)
       return
     }
-
-    // const innerFn = userWordMap.get(wordToken.word)
-    // if (innerFn) {
-    //   compute(innerFn)
-    //   return;
-    // }
 
     throw new Error(`Unknown word: ${wordToken.word}`)
   }

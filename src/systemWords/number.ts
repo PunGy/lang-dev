@@ -39,7 +39,7 @@ export const div = makePureFn(
   '/',
   [Token.tnum, Token.tnum],
   Token.tnum,
-  ([b, a]) => a / b,
+  ([b, a]) => Math.trunc(a / b),
   ([b, a]) => `${a} / ${b}`,
   'divide',
 )
@@ -70,6 +70,6 @@ export const lt = makePureFn(
   [Token.tnum, Token.tnum],
   Token.tbool,
   ([b, a]) => a < b,
-  ([b, a]) => `${b} < ${a}`,
+  ([b, a]) => `${a} < ${b}`,
   'less',
 )

@@ -120,6 +120,7 @@ function newWord(computer: Computer) {
   }
 
   metaWordMap.set(word.word, () => {
+    output.println(`-( UNWRAP ${word.word} )-`)
     computer.pushTokens(tokens)
   })
 }

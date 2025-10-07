@@ -20,8 +20,6 @@ export function initEditor(): Editor {
     onChange(fn) {
       editorElem.addEventListener('input', () => {
         const content = this.content
-
-
         localStorage.setItem(PERSISTENCE_KEY, content)
         fn(content)
       })

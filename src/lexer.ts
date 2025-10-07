@@ -3,6 +3,8 @@ import * as Token from './tokens'
 const whitespace = ' '
 const newline = '\n'
 
+const isWordBreak = (char: string) => char === ' ' || char === '\n'
+
 export function lexer(code: string): Array<Token.Token> {
   const tokens: Array<Token.Token> = []
 
@@ -38,11 +40,19 @@ export function lexer(code: string): Array<Token.Token> {
     while (isNum() && !isAtEnd()) {
       strNum += consume()
     }
-    const num = parseFloat(strNum)
-    tokens.push(Token.makeNumber(num))
+
+    const cur = peek()
+    if (cur === undefined || isWordBreak(cur)) {
+      // num was terminated with word break - indeed a num
+      const num = parseFloat(strNum)
+      tokens.push(Token.makeNumber(num))
+    } else {
+      // num was terminated with another symbol- a compound of num
+      readWord(strNum)
+    }
   }
-  const readWord = () => {
-    let word = ''
+  const readWord = (startWith = '') => {
+    let word = startWith
     while (isWord() && !isAtEnd()) {
       word += consume()
     }

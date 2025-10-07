@@ -22,8 +22,8 @@ function process(code: string) {
     const tokens = lexer(code)
 
     output.clear()
-    output.print(tokens.map(token => Token.print(token)).toString())
-    output.print("\n\n --- COMPUTATION --- \n\n")
+    // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
+    output.print("--- COMPUTATION ---\n\n")
 
     const computer = new Computer(tokens)
     Machine.clear()
