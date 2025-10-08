@@ -5,18 +5,29 @@ import * as Token from './tokens'
 import * as Machine from './machine'
 import './style.css'
 import { Computer } from './compute'
+import { initToolbar } from './toolbar'
 
 const editor = initEditor()
+const toolbar = initToolbar()
 Machine.init()
 
-editor.onChange(content => {
-  process(content)
+editor.restore()
+
+let unwatch: (() => void) | null = null
+toolbar.onWatchMode((enabled) => {
+  if (enabled) {
+    unwatch = editor.onChange(content => {
+      process(content)
+    })
+    process(editor.content)
+  } else {
+    unwatch?.()
+  }
 })
 
-editor.restore()
-if (editor.content !== '') {
+toolbar.onStart(() => {
   process(editor.content)
-}
+})
 
 function process(code: string) {
   output.clear()

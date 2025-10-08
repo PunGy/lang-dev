@@ -1,6 +1,6 @@
 export interface Editor {
   content: string;
-  onChange(fn: (content: string) => void): void;
+  onChange(fn: (content: string) => void): () => void;
   restore(): void;
 }
 
@@ -42,11 +42,15 @@ export function initEditor(): Editor {
       return getContent()
     },
     onChange(fn) {
-      editorElem.addEventListener('input', () => {
+      const handler = () => {
         const content = this.content
         localStorage.setItem(PERSISTENCE_KEY, content)
         fn(content)
-      })
+      }
+      editorElem.addEventListener('input', handler)
+      return () => {
+        editorElem.removeEventListener('input', handler)
+      }
     },
     restore() {
       const content = localStorage.getItem(PERSISTENCE_KEY)
