@@ -1,14 +1,9 @@
-import { initEditor } from './editor'
-import { lexer } from './lexer'
-import { output } from './output'
-import * as Token from './tokens'
+import { editor } from './editor'
 import * as Machine from './machine'
+import * as System from './system'
 import './style.css'
-import { Computer } from './compute'
-import { initToolbar } from './toolbar'
+import { toolbar } from './toolbar'
 
-const editor = initEditor()
-const toolbar = initToolbar()
 Machine.init()
 
 editor.restore()
@@ -16,39 +11,16 @@ editor.restore()
 let unwatch: (() => void) | null = null
 toolbar.onWatchMode((enabled) => {
   if (enabled) {
-    unwatch = editor.onChange(content => {
-      process(content)
+    unwatch = editor.onChange(() => {
+      System.run()
     })
-    process(editor.content)
+    System.run()
   } else {
     unwatch?.()
   }
 })
 
 toolbar.onStart(() => {
-  process(editor.content)
+  System.run()
 })
-
-function process(code: string) {
-  output.clear()
-
-  try {
-    const tokens = lexer(code)
-
-    // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
-    output.print("--- COMPUTATION ---\n\n")
-
-    const computer = new Computer(tokens)
-    Machine.clear()
-    computer.run()
-  } catch(err) {
-    if (err instanceof Error) {
-      output.print(err.toString())
-    } else {
-      output.print(`Unknown error: ${err}`)
-    }
-  }
-
-  output.flush()
-}
 

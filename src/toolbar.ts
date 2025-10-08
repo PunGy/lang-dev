@@ -86,3 +86,5 @@ export function initToolbar(): Toolbar {
 
   return toolbar
 }
+
+export const toolbar = initToolbar()

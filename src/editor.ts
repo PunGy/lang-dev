@@ -1,3 +1,5 @@
+import * as System from './system'
+
 export interface Editor {
   content: string;
   onChange(fn: (content: string) => void): () => void;
@@ -21,6 +23,12 @@ export function initEditor(): Editor {
         break
       case 'Enter': {
         e.preventDefault()
+
+        if (e.ctrlKey) {
+          System.run()
+          return
+        }
+
         const selection = window.getSelection()
         if (!selection?.rangeCount) return
 
@@ -65,3 +73,5 @@ export function initEditor(): Editor {
 
   return editor
 }
+
+export const editor = initEditor()
