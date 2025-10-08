@@ -51,6 +51,26 @@ html,body, input {
   border-bottom: 1px solid;
 }
 
+#tabs {
+  display: flex;
+  border-bottom: 1px solid;
+}
+.tab {
+  background-color: #313335;
+  padding: 5px 20px;
+  cursor: pointer;
+}
+.tab.active {
+  background-color: #3f4143;
+}
+.output-panel {
+  display: none;
+}
+.output-panel.active {
+  display: block;
+}
+
+
 .button {
   cursor: pointer;
 }

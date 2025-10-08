@@ -52,22 +52,22 @@ export function IF(computer: Computer) {
   if (elseI > -1) {
     // if else then
     if (flag) {
-      output.println(`--- IF (.) ELSE THEN ---`)
-      output.print(`|->`)
+      output.traceln(`--- IF (.) ELSE THEN ---`)
+      output.trace(`|->`)
       computer.pushTokens(tokens.slice(0, elseI))
     } else {
-      output.println(`--- IF ELSE (.) THEN ---`)
-      output.print(`|->`)
+      output.traceln(`--- IF ELSE (.) THEN ---`)
+      output.trace(`|->`)
       computer.pushTokens(tokens.slice(elseI + 1))
     }
   } else {
     // if then
     if (flag) {
-      output.println(`--- IF (.) THEN ---`)
-      output.print(`|->`)
+      output.traceln(`--- IF (.) THEN ---`)
+      output.trace(`|->`)
       computer.pushTokens(tokens)
     } else {
-      output.println(`--- IF (-) THEN ---`)
+      output.traceln(`--- IF (-) THEN ---`)
     }
   }
 }

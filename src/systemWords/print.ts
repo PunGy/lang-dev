@@ -12,42 +12,44 @@ import { output } from '../output'
 
 // ( n -- n )
 export function print() {
-  output.println('--- PRINT ---')
+  output.traceln('--- PRINT ---')
   const token = Machine.peek()
-  output.print('|->')
+  output.traceln('|->')
   if (token) {
-    output.println(Token.print(token))
+    output.traceln(Token.print(token))
+    output.println(Token.printLiteral(token))
   } else {
-    output.println('EMPTY STACK')
+    output.uniln('EMPTY STACK')
   }
 }
 
 // ( n -- )
 export function printPop() {
-  output.println('--- PRINT-POP ---')
-  output.print('|->')
+  output.traceln('--- PRINT-POP ---')
+  output.trace('|->')
   const token = Machine.pop()
   if (token) {
-    output.println(Token.print(token))
+    output.traceln(Token.print(token))
+    output.println(Token.printLiteral(token))
   } else {
-    output.println('EMPTY STACK')
+    output.uniln('EMPTY STACK')
   }
 }
 
 // ( -- )
 export function printStack() {
-  output.println('--- PRINT-STACK ---')
+  output.traceln('--- PRINT-STACK ---')
   if (Machine.isEmpty()) {
-    output.print('|-> EMPTY STACK')
+    output.uniln('EMPTY STACK')
     return
   }
 
   let i = Machine.length() - 1;
   while (i > -1) {
     const token = Machine.peekPos(i)!
-    output.println(`[${i}]: ${Token.print(token)}`)
+    output.uniln(`[${i}]: ${Token.printLiteral(token)}`)
     i--
   }
-  output.println('---')
+  output.traceln('---')
 }
 

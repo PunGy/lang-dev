@@ -1,9 +1,11 @@
+import { output } from './output';
 import * as System from './system'
 
 export interface Editor {
   content: string;
   onChange(fn: (content: string) => void): () => void;
   restore(): void;
+  focus(): void;
 }
 
 const PERSISTENCE_KEY = 'editor-state'
@@ -44,7 +46,18 @@ export function initEditor(): Editor {
           return
         }
         break
-
+      case 'KeyO':
+        if (e.ctrlKey) {
+          e.preventDefault()
+          output.showOutput();
+        }
+        break
+      case 'KeyI':
+        if (e.ctrlKey) {
+          e.preventDefault()
+          output.showTrace();
+        }
+        break
     }
   });
 
@@ -54,9 +67,7 @@ export function initEditor(): Editor {
     },
     onChange(fn) {
       const handler = () => {
-        const content = this.content
-        localStorage.setItem(PERSISTENCE_KEY, content)
-        fn(content)
+        fn(editor.content)
       }
       editorElem.addEventListener('input', handler)
       return () => {
@@ -69,8 +80,16 @@ export function initEditor(): Editor {
       if (content) {
         editorElem.innerText = content
       }
-    }
+    },
+    focus() {
+      editorElem.focus()
+    },
   }
+
+  editorElem.addEventListener('input', () => {
+    const content = editor.content
+    localStorage.setItem(PERSISTENCE_KEY, content)
+  })
 
   const getContent = () => editorElem.innerText
 

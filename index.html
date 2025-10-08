@@ -39,7 +39,14 @@
         <div id="editor" contenteditable="plaintext-only" placeholder="code here..."></div>
       </div>
       <div id="output-container" class="container">
-        <div id="output"></div>
+        <div id="tabs">
+          <div class="tab active" id="trace-tab">Trace</div>
+          <div class="tab" id="output-tab">Output</div>
+        </div>
+        <div id="panels">
+          <div class="output-panel active" id="trace"></div>
+          <div class="output-panel" id="output"></div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

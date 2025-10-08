@@ -78,4 +78,10 @@ export const print = (token: Token): string => {
     case tcomment: return `[COMMENT: "${token.comment}"]`
   }
 }
+export const printLiteral = (token: Literal): string => {
+  switch (token.type) {
+    case tstr: return '"' + token.value + '"'
+    default: return token.value.toString()
+  }
+}
 

@@ -8,8 +8,8 @@ import { output } from '../output'
 
 // (n -- )
 export function drop() {
-  output.println('--- DROP ---')
-  output.print('|->')
+  output.traceln('--- DROP ---')
+  output.trace('|->')
   Machine.pop()
 }
 
@@ -19,14 +19,14 @@ export function dup() {
   if (token === undefined) {
     throw new Error('DUP: cannot duplicate empty stack!')
   }
-  output.println('--- DUP ---')
-  output.print('|->')
+  output.traceln('--- DUP ---')
+  output.trace('|->')
   Machine.push(token)
 }
 
 // (n1 n2 -- n2 n1)
 export function swap() {
-  output.println('--- SWAP ---')
+  output.traceln('--- SWAP ---')
 
   const n2 = Machine.pop()
   if (n2 === undefined) {
@@ -38,7 +38,7 @@ export function swap() {
   }
 
   const [t1, t2] = [Token.print(n1), Token.print(n2)]
-  output.println(`-( swap: (${t1} ${t2}), (${t2} ${t1}) )-`)
+  output.traceln(`-( swap: (${t1} ${t2}), (${t2} ${t1}) )-`)
 
   Machine.push(n2)
   Machine.push(n1)
@@ -46,7 +46,7 @@ export function swap() {
 
 // ( n1 n2 -- n1 n2 n1 )
 export function over() {
-  output.println('--- OVER ---')
+  output.traceln('--- OVER ---')
 
   const n2 = Machine.pop()
   if (n2 === undefined) {
@@ -57,7 +57,7 @@ export function over() {
     throw new Error('OVER: empty stack!')
   }
 
-  output.println(`-( over: push ${Token.print(n1)} on top )-`)
+  output.traceln(`-( over: push ${Token.print(n1)} on top )-`)
 
   Machine.push(n1)
   Machine.push(n2)

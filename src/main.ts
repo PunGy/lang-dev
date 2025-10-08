@@ -3,10 +3,13 @@ import * as Machine from './machine'
 import * as System from './system'
 import './style.css'
 import { toolbar } from './toolbar'
+import { output } from './output'
 
 Machine.init()
 
 editor.restore()
+editor.focus()
+output.restore()
 
 let unwatch: (() => void) | null = null
 toolbar.onWatchMode((enabled) => {

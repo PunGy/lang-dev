@@ -12,15 +12,15 @@ Example of following code execution:
 (n1 n2 -- max)
 : max
   over over               (n1 n2 n1 n2)
-  = if   drop             (they are equal)
-    else over over
-         > if drop        (n1 is greater)
-           else swap drop (n2 is greater)
-           then
-    then
+  = IF   drop             (they are equal)
+    ELSE over over
+         > IF drop        (n1 is greater)
+           ELSE swap drop (n2 is greater)
+           THEN
+    THEN
 ;
 
 20 25 max .
 ```
 
-![code example](assets/ui-example.png)
+![code example](assets/code-example.png)

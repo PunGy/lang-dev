@@ -23,7 +23,7 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
   const fnName = debugName.toUpperCase()
 
   return () => {
-    output.println(`-- ${fnName} --`)
+    output.traceln(`-- ${fnName} --`)
     const wrongUse = wrongParamMessage.bind(null, name, paramsString)
 
 
@@ -46,8 +46,8 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
       values.push(n.value)
     }
 
-    output.println(`-- ${debugExpr(values as unknown as Vs)} --`)
-    output.print('|-> ')
+    output.traceln(`-- ${debugExpr(values as unknown as Vs)} --`)
+    output.trace('|-> ')
 
     let make: (value: Token.LiteralType2Value[O]) => Token.LiteralType2Token[O];
     switch (outType) {
