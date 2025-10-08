@@ -16,18 +16,13 @@ export function initEditor(): Editor {
   }
 
   editorElem.addEventListener('keydown', (e: KeyboardEvent) => {
-    switch (e.key) {
+    switch (e.code) {
       case 'Tab':
         e.preventDefault();
         document.execCommand('insertText', false, '  ')
         break
       case 'Enter': {
         e.preventDefault()
-
-        if (e.ctrlKey) {
-          System.run()
-          return
-        }
 
         const selection = window.getSelection()
         if (!selection?.rangeCount) return
@@ -42,6 +37,14 @@ export function initEditor(): Editor {
         document.execCommand('insertText', false, '\n' + indentation)
         break
       }
+      case 'KeyS':
+        if (e.ctrlKey) {
+          e.preventDefault()
+          System.run()
+          return
+        }
+        break
+
     }
   });
 
