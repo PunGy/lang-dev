@@ -195,6 +195,7 @@ export function initToolbar(): Toolbar {
 
   let activeFile = localStorage.getItem(ACTIVE_FILE)!
   const files = initializeFiles()
+
   if (!activeFile) {
     // first open
     setActiveFile('Main')
@@ -207,30 +208,6 @@ export function initToolbar(): Toolbar {
 
   fileInput.addEventListener('change', () => {
     saveActiveFileName(fileInput.value)
-  })
-
-  const showDropdown = () => {
-    fileDropdown.classList.add('show')
-  }
-  const hideDropdown = () => {
-    fileDropdown.classList.remove('show')
-  }
-
-  document.addEventListener('click', ({ target }) => {
-    if (target && isHTMLElement(target) && fileDropdownToggle.contains(target)) {
-      return
-    }
-    hideDropdown()
-  })
-
-  fileDropdownToggle.addEventListener('click', (event) => {
-    event.stopPropagation()
-    const isShown = fileDropdown.classList.contains('show')
-    if (isShown) {
-      hideDropdown()
-    } else {
-      showDropdown()
-    }
   })
 
   fileDropdown.addEventListener('click', ({ target }) => {
@@ -293,6 +270,33 @@ export function initToolbar(): Toolbar {
       fileChangeFn(file)
     }
   })
+
+  // dropdown showing functions
+
+  const showDropdown = () => {
+    fileDropdown.classList.add('show')
+  }
+  const hideDropdown = () => {
+    fileDropdown.classList.remove('show')
+  }
+
+  document.addEventListener('click', ({ target }) => {
+    if (target && isHTMLElement(target) && fileDropdownToggle.contains(target)) {
+      return
+    }
+    hideDropdown()
+  })
+
+  fileDropdownToggle.addEventListener('click', (event) => {
+    event.stopPropagation()
+    const isShown = fileDropdown.classList.contains('show')
+    if (isShown) {
+      hideDropdown()
+    } else {
+      showDropdown()
+    }
+  })
+
 
   /**
    * Program start actions
