@@ -242,6 +242,15 @@ export function initToolbar(): Toolbar {
     if (target === newFileButton) {
       // make new file
       file = 'File'
+
+      let counter = 1;
+      if (files.has(file)) {
+        file += ' ' + counter
+      }
+      while (files.has(file)) {
+        file = file.split(' ').slice(0, -1).join(' ') + ' ' + (++counter)
+      }
+
       makeFile(file)
       setActiveFile(file)
     } else if (target.classList.contains('close-button')) {

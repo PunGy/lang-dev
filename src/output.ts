@@ -87,6 +87,9 @@ export const initOutput = (): Output => {
       this.uni(content + '\n')
     },
     flush() {
+      if (outputBuffer === '') {
+        outputBuffer = '[NO OUTPUT]'
+      }
       outputPanel.innerText = outputBuffer
       outputBuffer = ''
 
