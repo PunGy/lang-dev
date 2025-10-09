@@ -1,8 +1,9 @@
-import { editor } from './editor'
 import * as Machine from './machine'
 import * as System from './system'
 import './style.css'
+// Toolbar must go before edit (poor design fix this crap OMG)
 import { toolbar } from './toolbar'
+import { editor } from './editor'
 import { output } from './output'
 
 Machine.init()

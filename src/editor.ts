@@ -1,14 +1,13 @@
+import { toolbar } from './toolbar'
 import { output } from './output';
 import * as System from './system'
 
 export interface Editor {
-  content: string;
+  readonly content: string;
   onChange(fn: (content: string) => void): () => void;
   restore(): void;
   focus(): void;
 }
-
-const PERSISTENCE_KEY = 'editor-state'
 
 export function initEditor(): Editor {
   const editorElem = document.getElementById('editor')
@@ -65,6 +64,7 @@ export function initEditor(): Editor {
     get content() {
       return getContent()
     },
+
     onChange(fn) {
       const handler = () => {
         fn(editor.content)
@@ -75,9 +75,9 @@ export function initEditor(): Editor {
       }
     },
     restore() {
-      const content = localStorage.getItem(PERSISTENCE_KEY)
+      const content = toolbar.getActiveFileState()
 
-      if (content) {
+      if (content !== null) {
         editorElem.innerText = content
       }
     },
@@ -88,7 +88,11 @@ export function initEditor(): Editor {
 
   editorElem.addEventListener('input', () => {
     const content = editor.content
-    localStorage.setItem(PERSISTENCE_KEY, content)
+    toolbar.setActiveFileState(content)
+  })
+
+  toolbar.onFileChange(() => {
+    editor.restore()
   })
 
   const getContent = () => editorElem.innerText

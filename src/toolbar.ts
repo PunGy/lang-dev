@@ -7,23 +7,47 @@ export interface Toolbar {
   setState(nextState: ProgramState): void;
   onStart(handler: () => void): void;
   onStop(handler: () => void): void;
+  onFileChange(handler: (file: string) => void): void;
   onWatchMode(handler: (enabled: boolean) => void): void;
+  getActiveFileState(): string | null;
+  setActiveFileState(content: string): void;
   hideButtons(): void;
 }
+
+function isHTMLElement(obj: unknown): obj is HTMLElement {
+  // TBD
+  return obj instanceof HTMLElement
+}
+
+export const ACTIVE_FILE = 'active-file'
+const FILES = 'files'
 
 export function initToolbar(): Toolbar {
   const toolbarElem = document.getElementById('toolbar')
   const startButton = document.getElementById('start-button')
   const stopButton = document.getElementById('stop-button')
   const watchModeCheckbox = document.getElementById('watch-checkbox') as HTMLInputElement
+  const fileDropdownToggle = document.getElementById('select-file-button')
+  const fileDropdown = document.getElementById('file-popup')
+  const newFileButton = document.getElementById('file-new-option')
+  const fileInput = document.getElementById('file-name') as HTMLInputElement
 
-  if (!toolbarElem || !startButton || !stopButton || !watchModeCheckbox) {
+  if (!toolbarElem 
+    ||!startButton 
+    ||!stopButton 
+    ||!watchModeCheckbox
+    ||!newFileButton
+    ||!fileDropdown
+    ||!fileDropdownToggle
+    ||!fileInput
+  ){
     throw new Error('No toolbar in the application!')
   }
 
   let watchMode = false
   let startFn: (() => void) | undefined;
   let watchModeFn: (() => void) | undefined;
+  let fileChangeFn: ((file: string) => void) | undefined;
   const toolbar: Toolbar = {
     state: ProgramState.READY,
     onStart(fn) {
@@ -57,6 +81,17 @@ export function initToolbar(): Toolbar {
     setState(nextState) {
       this.state = nextState
     },
+
+    onFileChange(fn) {
+      fileChangeFn = fn
+    },
+
+    getActiveFileState() {
+      return localStorage.getItem(`file-${activeFile}`)
+    },
+    setActiveFileState(content) {
+      localStorage.setItem(`file-${activeFile}`, content)
+    },
   }
 
   const hideStart = () => {
@@ -68,6 +103,191 @@ export function initToolbar(): Toolbar {
   const hideStop = () => {
     stopButton.style.display = 'none'
   }
+
+  /**
+   * File Management
+   */
+
+  const updateFile = (oldFile: string, newFile: string) => {
+    const elem = files.get(oldFile)
+
+    if (!elem) {
+      throw new Error(`No such file as ${elem}`)
+    }
+
+    const text = elem.firstElementChild
+    if (!text || !isHTMLElement(text)) {
+      throw new Error(`Cannot set text for tab ${oldFile}!`)
+    }
+    text.innerText = newFile
+    elem.dataset.file = newFile
+    const oldId = `file-${oldFile}`
+    const content = localStorage.getItem(oldId)
+    if (content === null) {
+      throw new Error(`No content for ${oldFile}`)
+    }
+    localStorage.removeItem(oldId)
+    localStorage.setItem(`file-${newFile}`, content)
+
+    files.delete(oldFile)
+    files.set(newFile, elem)
+    syncFiles()
+  }
+  const setActiveFile = (file: string) => {
+    activeFile = file 
+    fileInput.value = file
+    localStorage.setItem(ACTIVE_FILE, file)
+  }
+  const saveActiveFileName = (newName: string) => {
+    updateFile(activeFile, newName)
+    setActiveFile(newName)
+  }
+  const makeFile = (file: string) => {
+    const fileId = `file-${file}`
+    if (!files.has(file)) {
+      files.set(file, null)
+    }
+
+    const elem = document.createElement('div')
+    const text = document.createElement('span')
+    text.innerText = file
+    elem.appendChild(text)
+    elem.classList.add('file-option')
+    elem.dataset.file = file
+    const close = document.createElement('div')
+    close.innerText = 'X'
+    close.classList.add('button', 'close-button')
+    elem.appendChild(close)
+
+    files.set(file, elem)
+
+    if (localStorage.getItem(fileId) === null) {
+      localStorage.setItem(fileId, '')
+    }
+
+    fileDropdown.prepend(elem)
+  }
+  const removeFile = (file: string) => {
+    if (!files.has(file)) {
+      throw new Error(`No such file to delete ${file}`)
+    }
+
+    files.get(file)!.remove()
+    files.delete(file)
+    localStorage.removeItem(`file-${file}`)
+  }
+  const initializeFiles = () => {
+    const list = localStorage.getItem(FILES)?.split('<|>') ?? []
+    const map = new Map<string, HTMLElement | null>()
+    list.forEach(file => {
+      map.set(file, null)
+    })
+
+    return map
+  }
+  const serializeFiles = () => {
+    return Array.from(files.keys()).join('<|>')
+  }
+
+  const syncFiles = () => {
+    localStorage.setItem(FILES, serializeFiles())
+  }
+
+  let activeFile = localStorage.getItem(ACTIVE_FILE)!
+  const files = initializeFiles()
+  if (!activeFile) {
+    // first open
+    setActiveFile('Main')
+    files.set(activeFile, null)
+  }
+  fileInput.value = activeFile
+  files.forEach((_, file) => {
+    makeFile(file)
+  })
+
+  fileInput.addEventListener('change', () => {
+    saveActiveFileName(fileInput.value)
+  })
+
+  const showDropdown = () => {
+    fileDropdown.classList.add('show')
+  }
+  const hideDropdown = () => {
+    fileDropdown.classList.remove('show')
+  }
+
+  document.addEventListener('click', ({ target }) => {
+    if (target && isHTMLElement(target) && fileDropdownToggle.contains(target)) {
+      return
+    }
+    hideDropdown()
+  })
+
+  fileDropdownToggle.addEventListener('click', (event) => {
+    event.stopPropagation()
+    const isShown = fileDropdown.classList.contains('show')
+    if (isShown) {
+      hideDropdown()
+    } else {
+      showDropdown()
+    }
+  })
+
+  fileDropdown.addEventListener('click', ({ target }) => {
+    if (!target || !isHTMLElement(target)) {
+      return
+    }
+
+    let file: string;
+    if (target === newFileButton) {
+      // make new file
+      file = 'File'
+      makeFile(file)
+      setActiveFile(file)
+    } else if (target.classList.contains('close-button')) {
+      // remove file
+      file = target.parentElement?.dataset.file!
+      if (!file) {
+        throw new Error('Cannot get name of file to delete!')
+      }
+      const nextFile = target.parentElement!.nextElementSibling
+      if (!nextFile || !isHTMLElement(nextFile)) {
+        throw new Error('Cannot determine next file name')
+      }
+
+      removeFile(file)
+
+      if (file !== activeFile) {
+        syncFiles()
+        return
+      }
+
+      if (nextFile === newFileButton) {
+        file = 'File'
+        makeFile(file)
+      } else {
+        file = nextFile.dataset.file!
+      }
+
+      setActiveFile(file)
+    } else {
+      // select file
+      file = target.dataset.file!
+      if (!files.get(file)) {
+        throw new Error(`Unknown element for ${file}`)
+      }
+      setActiveFile(file)
+    }
+    syncFiles()
+
+    if (fileChangeFn) {
+      fileChangeFn(file)
+    }
+  })
+
+  /**
+   * Program start actions
+   */
 
   startButton.addEventListener('click', () => {
     if (startFn) {
