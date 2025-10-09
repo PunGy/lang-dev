@@ -151,6 +151,7 @@ export function initToolbar(): Toolbar {
     const elem = document.createElement('div')
     const text = document.createElement('span')
     text.innerText = file
+    text.dataset.file = file
     elem.appendChild(text)
     elem.classList.add('file-option')
     elem.dataset.file = file
