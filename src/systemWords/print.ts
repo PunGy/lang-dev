@@ -38,18 +38,19 @@ export function printPop() {
 
 // ( -- )
 export function printStack() {
-  output.traceln('--- PRINT-STACK ---')
+  output.uniln('--- PRINT-STACK ---')
   if (Machine.isEmpty()) {
     output.uniln('EMPTY STACK')
     return
   }
 
-  let i = Machine.length() - 1;
+  const len = Machine.length() - 1
+  let i = len;
   while (i > -1) {
     const token = Machine.peekPos(i)!
-    output.uniln(`[${i}]: ${Token.printLiteral(token)}`)
+    output.uniln(`[${len - i}]: ${Token.printLiteral(token)}`)
     i--
   }
-  output.traceln('---')
+  output.uniln('---')
 }
 

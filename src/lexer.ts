@@ -13,13 +13,14 @@ export function lexer(code: string): Array<Token.Token> {
 
   const charCount = code.length
   const peek = () => code[i]
+  const peekNext = () => code[i + 1]
   const prev = () => code[i - 1]
   const skip = () => i++
   const consume = () => code[i++]
   const isAtEnd = () => i === charCount
 
-  const isNum = () => {
-    const char = peek()
+  const isNum = (c?: string) => {
+    const char = c ?? peek()
     if (char === undefined) return false;
     const code = char.charCodeAt(0);
     // 0-9
@@ -35,8 +36,8 @@ export function lexer(code: string): Array<Token.Token> {
         return true
     }
   }
-  const readNum = () => {
-    let strNum = ''
+  const readNum = (negative = false) => {
+    let strNum = negative ? '-' : ''
     while (isNum() && !isAtEnd()) {
       strNum += consume()
     }
@@ -52,6 +53,11 @@ export function lexer(code: string): Array<Token.Token> {
     }
   }
   const readWord = (startWith = '') => {
+    if (peek() === '-' && isNum(peekNext())) {
+      consume()
+      readNum(true)
+      return
+    }
     let word = startWith
     while (isWord() && !isAtEnd()) {
       word += consume()
@@ -79,7 +85,7 @@ export function lexer(code: string): Array<Token.Token> {
     }
     tokens.push(Token.makeString(value))
   }
-  const readComment = () => {
+  const readScopedComment = () => {
     skip()
     let lvl = 0
     let comment = ''
@@ -95,6 +101,16 @@ export function lexer(code: string): Array<Token.Token> {
       }
       comment += consume()
     }
+    tokens.push(Token.makeComment(comment))
+  }
+  const readUnscopedComment = () => {
+    skip()
+
+    let comment = ''
+    while (!isAtEnd() && peek() !== newline) {
+      comment += consume()
+    }
+
     tokens.push(Token.makeComment(comment))
   }
   const readNewline = () => {
@@ -118,7 +134,10 @@ export function lexer(code: string): Array<Token.Token> {
         readNewline()
         break
       case '(':
-        readComment()
+        readScopedComment()
+        break
+      case '\\':
+        readUnscopedComment()
         break
       case '"':
         readString()

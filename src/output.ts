@@ -1,6 +1,5 @@
 export interface Output {
   clear(): void;
-  clearOutput(): void;
   print(content: string): void;
   println(content: string): void;
   trace(content: string): void;
@@ -61,11 +60,11 @@ export const initOutput = (): Output => {
   let traceBuffer = ''
   return {
     clear() {
-      this.clearOutput()
-    },
-    clearOutput() {
       outputPanel.innerText = ''
       outputBuffer = ''
+
+      tracePanel.innerText = ''
+      traceBuffer = ''
     },
     print(content) {
       return outputBuffer += content

@@ -5,6 +5,7 @@
 import * as Machine from '../machine'
 import * as Token from '../tokens'
 import { output } from '../output'
+import { makePureFn, printTypes, wrongParamMessage } from './utils'
 
 // (n -- )
 export function drop() {
@@ -62,4 +63,40 @@ export function over() {
   Machine.push(n1)
   Machine.push(n2)
   Machine.push(n1)
+}
+
+export function isEmpty() {
+  output.traceln('--- IS_EMPTY? ---')
+
+  output.trace('|->')
+  Machine.push(Token.makeBool(Machine.isEmpty()))
+}
+
+export function len() {
+  output.traceln('--- STACK_LEN ---')
+
+  output.trace('|->')
+  Machine.push(Token.makeNumber(Machine.length()))
+}
+
+const wrongPickUse = wrongParamMessage.bind(null, 'PICK', printTypes([Token.tnum]))
+export function pick() {
+  output.traceln('--- PICK ---')
+
+  const n = Machine.pop()
+
+  if (n === undefined) {
+    throw new Error(wrongPickUse('nothing!'))
+  }
+  if (n.type !== Token.tnum) {
+    throw new Error(wrongPickUse(printTypes([n.type])))
+  }
+
+  const t = Machine.pick(n.value)
+
+  if (t === undefined) {
+    throw new Error(`Cannot pick item on ${n.value} position of the stack!`)
+  }
+
+  Machine.push(t)
 }

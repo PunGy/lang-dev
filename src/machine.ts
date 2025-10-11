@@ -33,6 +33,9 @@ export const pop = (): Token | undefined => {
 export const length = () => stack.length
 export const isEmpty = () => stack.length === 0
 
+export const pick = (i: number) =>
+  stack[stack.length - 1 - i]
+
 export function init() {
   initMetaWords()
   initSystemWords()

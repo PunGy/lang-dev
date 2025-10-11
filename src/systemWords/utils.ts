@@ -9,7 +9,7 @@ export function wrongParamMessage(word: string, paramMessage: string, got: strin
   return `${word}: require ${paramMessage} on top of stack! Got: ${got}`
 }
 
-const printTypes = (types: readonly Token.LiteralType[]) => `(${types.map(Token.printType).join(' ')})`
+export const printTypes = (types: readonly Token.LiteralType[]) => `(${types.map(Token.printType).join(' ')})`
 export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs extends { [K in keyof Ts]: Token.LiteralType2Value[Ts[K]] }, O extends Token.LiteralType>(
   name: string,
   params: Ts,
@@ -21,11 +21,10 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
   const paramsCount = params.length
   const paramsString = printTypes(params)
   const fnName = debugName.toUpperCase()
+  const wrongUse = wrongParamMessage.bind(null, name, paramsString)
 
   return () => {
     output.traceln(`-- ${fnName} --`)
-    const wrongUse = wrongParamMessage.bind(null, name, paramsString)
-
 
     if (Machine.isEmpty()) {
       throw new Error(wrongUse('nothing!'))
@@ -40,7 +39,7 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
         throw new Error(wrongUse(printTypes(params.slice(0, i))))
       }
       if (n.type !== params[i]!) {
-        throw new Error(wrongUse(printTypes(params.slice(0, i))))
+        throw new Error(wrongUse(printTypes(params.slice(0, i).concat([n.type]))))
       }
 
       values.push(n.value)
