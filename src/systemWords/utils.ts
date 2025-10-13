@@ -4,6 +4,7 @@
 import * as Token from '../tokens'
 import * as Machine from '../machine'
 import { output } from '../output'
+import { execution } from '../executionGraph'
 
 export function wrongParamMessage(word: string, paramMessage: string, got: string) {
   return `${word}: require ${paramMessage} on top of stack! Got: ${got}`
@@ -25,6 +26,7 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
 
   return () => {
     output.traceln(`-- ${fnName} --`)
+    execution.beginBlockOperation(fnName)
 
     if (Machine.isEmpty()) {
       throw new Error(wrongUse('nothing!'))
@@ -65,5 +67,6 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
     }
 
     Machine.push(make(expr(values as unknown as Vs)))
+    execution.endBlockOperation();
   }
 }

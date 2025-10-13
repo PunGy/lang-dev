@@ -2,6 +2,7 @@ import * as Token from './tokens'
 import { output } from './output'
 import { initMetaWords } from './metaWords/words'
 import { initSystemWords } from './systemWords/words'
+import { execution } from './executionGraph'
 
 type Token = Token.Literal
 
@@ -19,9 +20,11 @@ export const peekPos = (i: number) => stack[i]
 export const push = (token: Token) => {
   stack.push(token)
   output.traceln(`PUSH: ${Token.print(token)}, LENGTH: ${stack.length}`)
+  execution.operation('PUSH', { token })
 }
 export const pop = (): Token | undefined => {
   const token = stack.pop()
+  execution.operation('POP', { token })
   if (token) {
     output.traceln(`POP: ${Token.print(token)}, LENGTH: ${stack.length}`)
   } else {

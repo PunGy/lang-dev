@@ -49,6 +49,15 @@ export interface Comment extends BaseToken {
 export const makeComment = (comment: string): Comment =>
   ({ type: tcomment, comment })
 
+// some internal interpretator side effect, not part of the language
+export const teffect = Symbol('effect')
+export interface Effect extends BaseToken {
+  type: typeof teffect;
+  effect: () => void;
+}
+export const makeEffect = (effect: () => void): Effect =>
+  ({ type: teffect, effect })
+
 export type Literal = Number | String | Bool
 export type LiteralType = Literal['type']
 export type LiteralType2Value = {
@@ -66,7 +75,7 @@ export const printType = (t: LiteralType) => {
   }
 }
 
-export type Token = Word | Number | String | Bool | Comment | Newline
+export type Token = Word | Number | String | Bool | Comment | Newline | Effect
 
 export const print = (token: Token): string => {
   switch (token.type) {
@@ -76,6 +85,7 @@ export const print = (token: Token): string => {
     case tnum: return `[NUMBER: ${token.value}]`
     case tstr: return `[STRING: "${token.value}"]`
     case tcomment: return `[COMMENT: "${token.comment}"]`
+    case teffect: return `[EFFECT]`
   }
 }
 export const printLiteral = (token: Literal): string => {

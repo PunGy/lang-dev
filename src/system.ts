@@ -7,10 +7,12 @@ import { editor } from "./editor"
 import { lexer } from "./lexer"
 import { output } from "./output"
 import * as Machine from './machine'
+import { execution } from "./executionGraph"
 
 export function run() {
   const code = editor.content
   output.clear()
+  execution.reset()
 
   try {
     const tokens = lexer(code)
@@ -27,5 +29,6 @@ export function run() {
     }
   }
 
+  console.log(execution.graph())
   output.flush()
 }

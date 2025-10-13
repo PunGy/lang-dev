@@ -1,4 +1,5 @@
 import type { Computer } from '../compute'
+import { execution } from '../executionGraph'
 import * as Machine from '../machine'
 import { output } from '../output'
 import * as Token from '../tokens'
@@ -41,6 +42,8 @@ export function IF(computer: Computer) {
     throw new Error(`Unterminated if condition!`)
   }
 
+  execution.beginBlockOperation('IF')
+
   const flagTok = Machine.pop()
 
   if (flagTok === undefined || flagTok.type !== Token.tbool) {
@@ -52,24 +55,36 @@ export function IF(computer: Computer) {
   if (elseI > -1) {
     // if else then
     if (flag) {
+      execution.beginBlockOperation('THEN')
+
       output.traceln(`--- IF (.) ELSE THEN ---`)
       output.trace(`|->`)
       computer.pushTokens(tokens.slice(0, elseI))
+
+      execution.endBlockOperation()
     } else {
+      execution.beginBlockOperation('ELSE')
+
       output.traceln(`--- IF ELSE (.) THEN ---`)
       output.trace(`|->`)
       computer.pushTokens(tokens.slice(elseI + 1))
+
+      execution.endBlockOperation()
     }
   } else {
     // if then
     if (flag) {
+      execution.beginBlockOperation('THEN')
       output.traceln(`--- IF (.) THEN ---`)
       output.trace(`|->`)
       computer.pushTokens(tokens)
+      execution.endBlockOperation()
     } else {
       output.traceln(`--- IF (-) THEN ---`)
     }
   }
+
+  execution.endBlockOperation()
 }
 
 export function beginLoop(computer: Computer) {
@@ -78,8 +93,12 @@ export function beginLoop(computer: Computer) {
 
   const tokens: Array<Token> = []
 
+  execution.beginBlockOperation('BEGIN_UNTIL')
+
   const tokenLoop = () => {
     loopsCount++;
+    execution.beginBlockOperation('LOOP', { iteration: loopsCount })
+
     if (loopsCount > 100_000) {
       throw new Error('100_000 iterations of the loop... Seems like unterminated infinite loop')
     }
@@ -89,7 +108,7 @@ export function beginLoop(computer: Computer) {
 
       if (tok.type === Token.tword && tok.word === 'UNTIL') {
         terminated = true
-        return
+        break
       }
       if (!terminated) {
         tokens.push(tok)
@@ -97,6 +116,7 @@ export function beginLoop(computer: Computer) {
       computer.skip()
       computer.execute(tok)
     }
+    execution.endBlockOperation()
   }
   tokenLoop()
 
@@ -122,4 +142,6 @@ export function beginLoop(computer: Computer) {
       break
     }
   }
+
+  execution.endBlockOperation()
 }

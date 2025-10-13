@@ -71,6 +71,9 @@ export class Computer {
       case Token.tword:
         this.processWord(token)
         break
+      case Token.teffect:
+        token.effect()
+        break
     }
   }
 }

@@ -1,4 +1,5 @@
 import type { Computer } from '../compute'
+import { execution } from '../executionGraph'
 import { output } from '../output'
 import * as Token from '../tokens'
 import { metaWordMap } from './wordMap'
@@ -41,9 +42,14 @@ export function newWord(computer: Computer) {
   if (lvl > 0 || !terminated) {
     throw new Error(`Unterminated word registration!`)
   }
+  tokens.push(
+    Token.makeEffect(() => { execution.endBlockOperation() })
+  )
 
-  metaWordMap.set(word.word, () => {
-    output.traceln(`-( UNWRAP ${word.word} )-`)
+  const fnName = word.word
+  metaWordMap.set(fnName, () => {
+    execution.beginBlockOperation(fnName)
+    output.traceln(`-( UNWRAP ${fnName} )-`)
     computer.pushTokens(tokens)
   })
 }
