@@ -75,11 +75,14 @@ html,body, input {
 #file-name {
   border: none;
   background: transparent;
-  border-bottom: 1px solid;
   padding: 6px 12px;
   font-size: 14px;
   outline: none;
   text-align: center;
+  font-family: "Fira Code", monospace, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+#file-name:hover,#file-name:focus {
+  background-color: #333333;
 }
 
 #select-file-button {
