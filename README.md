@@ -20,7 +20,7 @@ Example of following code execution:
     THEN
 ;
 
-20 25 max .
+25 20 max .
 ```
 
 ![code example](assets/code-example.png)
