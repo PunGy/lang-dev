@@ -4,8 +4,7 @@
 
 import * as Machine from '../machine'
 import * as Token from '../tokens'
-import { output } from '../output'
-import { makePureFn, printTypes, wrongParamMessage } from './utils'
+import { printTypes, wrongParamMessage } from './utils'
 import { execution } from '../executionGraph'
 
 // (n -- )

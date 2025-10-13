@@ -3,7 +3,6 @@
  */
 import * as Token from '../tokens'
 import * as Machine from '../machine'
-import { output } from '../output'
 import { execution } from '../executionGraph'
 
 export function wrongParamMessage(word: string, paramMessage: string, got: string) {

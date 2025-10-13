@@ -84,3 +84,23 @@ Example of following code execution:
 
 ">-<" 4 '* .
 ```
+
+### Sum of values in stack
+
+```
+: sum
+  empty?
+  IF 0
+  ELSE
+    stack-len 1 >
+    IF 
+      BEGIN
+        +
+        stack-len 1 =
+      UNTIL
+    THEN
+  THEN
+;
+
+1 2 3 4 5 sum .
+```

@@ -1,6 +1,5 @@
 import type { Computer } from '../compute'
 import { execution } from '../executionGraph'
-import { output } from '../output'
 import * as Token from '../tokens'
 import { makeEndBlockEffect } from './utils'
 import { metaWordMap } from './wordMap'
