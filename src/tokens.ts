@@ -77,6 +77,19 @@ export const printType = (t: LiteralType) => {
 
 export type Token = Word | Number | String | Bool | Comment | Newline | Effect
 
+const tokensSet = new Set([tword, tnum, tstr, tbool, tcomment, tnewline, teffect])
+const literalSet = new Set([tnum, tstr, tbool])
+
+export function isToken(obj: any): obj is Token {
+  return obj instanceof Object && typeof obj.type === 'symbol' && tokensSet.has(obj.type)
+}
+export function isLiteralToken(obj: any): obj is Literal {
+  return obj instanceof Object && typeof obj.type === 'symbol' && literalSet.has(obj.type)
+}
+export function isLiteral(token: Token): token is Literal {
+  return literalSet.has(token.type)
+}
+
 export const print = (token: Token): string => {
   switch (token.type) {
     case tword: return `[WORD: "${token.word}"]`

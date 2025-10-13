@@ -5,6 +5,7 @@
 import * as Machine from '../machine'
 import * as Token from '../tokens'
 import { output } from '../output'
+import { execution } from '../executionGraph'
 
 /**
  * Side effect output
@@ -12,11 +13,8 @@ import { output } from '../output'
 
 // ( n -- n )
 export function print() {
-  output.traceln('--- PRINT ---')
   const token = Machine.peek()
-  output.traceln('|->')
   if (token) {
-    output.traceln(Token.print(token))
     output.println(Token.printLiteral(token))
   } else {
     output.uniln('EMPTY STACK')
@@ -25,15 +23,14 @@ export function print() {
 
 // ( n -- )
 export function printPop() {
-  output.traceln('--- PRINT-POP ---')
-  output.trace('|->')
+  execution.beginBlockOperation('PRINT-POP')
   const token = Machine.pop()
   if (token) {
-    output.traceln(Token.print(token))
     output.println(Token.printLiteral(token))
   } else {
     output.uniln('EMPTY STACK')
   }
+  execution.endBlockOperation()
 }
 
 // ( -- )

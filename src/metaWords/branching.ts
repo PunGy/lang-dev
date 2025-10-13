@@ -3,6 +3,7 @@ import { execution } from '../executionGraph'
 import * as Machine from '../machine'
 import { output } from '../output'
 import * as Token from '../tokens'
+import { makeEndBlockEffect } from './utils'
 
 type Token = Token.Token
 
@@ -52,39 +53,38 @@ export function IF(computer: Computer) {
 
   const flag = flagTok.value
 
+  const registerFinishEffect = (tokens: Array<Token.Token>) => {
+    tokens.push(
+      makeEndBlockEffect(), // out of ELSE THEN
+      makeEndBlockEffect(), // out of IF
+    )
+  }
+
   if (elseI > -1) {
     // if else then
     if (flag) {
       execution.beginBlockOperation('THEN')
+      const thenTokens = tokens.slice(0, elseI)
+      registerFinishEffect(thenTokens)
 
-      output.traceln(`--- IF (.) ELSE THEN ---`)
-      output.trace(`|->`)
-      computer.pushTokens(tokens.slice(0, elseI))
-
-      execution.endBlockOperation()
+      computer.pushTokens(thenTokens)
     } else {
       execution.beginBlockOperation('ELSE')
+      const elseTokens = tokens.slice(elseI + 1)
+      registerFinishEffect(elseTokens)
 
-      output.traceln(`--- IF ELSE (.) THEN ---`)
-      output.trace(`|->`)
-      computer.pushTokens(tokens.slice(elseI + 1))
-
-      execution.endBlockOperation()
+      computer.pushTokens(elseTokens)
     }
   } else {
     // if then
     if (flag) {
       execution.beginBlockOperation('THEN')
-      output.traceln(`--- IF (.) THEN ---`)
-      output.trace(`|->`)
+      registerFinishEffect(tokens)
       computer.pushTokens(tokens)
-      execution.endBlockOperation()
     } else {
-      output.traceln(`--- IF (-) THEN ---`)
+      execution.endBlockOperation()
     }
   }
-
-  execution.endBlockOperation()
 }
 
 export function beginLoop(computer: Computer) {

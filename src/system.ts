@@ -8,6 +8,7 @@ import { lexer } from "./lexer"
 import { output } from "./output"
 import * as Machine from './machine'
 import { execution } from "./executionGraph"
+import { prettyPrintGraph } from "./lib/graphPrinter"
 
 export function run() {
   const code = editor.content
@@ -30,5 +31,6 @@ export function run() {
   }
 
   console.log(execution.graph())
+  output.trace(prettyPrintGraph(execution.graph()))
   output.flush()
 }

@@ -7,12 +7,12 @@ interface ExecutionGraphMaker {
   graph(): GraphAnchorNode;
 }
 
-type NodeMeta = Record<string, any>
+export type NodeMeta = Record<string, any>
 
-const gtOperation = Symbol('operation')
-const gtBlock = Symbol('block')
-const gtAnchor = Symbol('anchor')
-interface GraphNodeBase {
+export const gtOperation = Symbol('operation')
+export const gtBlock = Symbol('block')
+export const gtAnchor = Symbol('anchor')
+export interface GraphNodeBase {
   type: Symbol,
   name: string;
   prev: GraphNode | null;
@@ -20,19 +20,19 @@ interface GraphNodeBase {
   parent: GraphNode | null;
   meta: NodeMeta;
 }
-interface GraphOperationNode extends GraphNodeBase {
+export interface GraphOperationNode extends GraphNodeBase {
   type: typeof gtOperation,
 }
-interface GraphBlockNode extends GraphNodeBase {
+export interface GraphBlockNode extends GraphNodeBase {
   type: typeof gtBlock
   children: GraphNode
 }
-interface GraphAnchorNode extends GraphNodeBase {
+export interface GraphAnchorNode extends GraphNodeBase {
   type: typeof gtAnchor
   name: '',
 }
 
-type GraphNode = GraphOperationNode | GraphBlockNode | GraphAnchorNode
+export type GraphNode = GraphOperationNode | GraphBlockNode | GraphAnchorNode
 
 const makeOperation = (name: string, meta: NodeMeta): GraphOperationNode => ({
   type: gtOperation,

@@ -25,7 +25,6 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
   const wrongUse = wrongParamMessage.bind(null, name, paramsString)
 
   return () => {
-    output.traceln(`-- ${fnName} --`)
     execution.beginBlockOperation(fnName)
 
     if (Machine.isEmpty()) {
@@ -46,9 +45,6 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
 
       values.push(n.value)
     }
-
-    output.traceln(`-- ${debugExpr(values as unknown as Vs)} --`)
-    output.trace('|-> ')
 
     let make: (value: Token.LiteralType2Value[O]) => Token.LiteralType2Token[O];
     switch (outType) {
