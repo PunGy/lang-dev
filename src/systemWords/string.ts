@@ -10,7 +10,7 @@ export const plus = makePureFn(
   [Token.tstr, Token.tstr],
   Token.tstr,
   ([b, a]) => a + b,
-  ([b, a]) => `${a} + ${b}`,
+  ([b, a]) => `"${a}" + "${b}"`,
   'concatenate',
 )
 

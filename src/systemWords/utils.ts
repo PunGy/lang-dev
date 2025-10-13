@@ -25,7 +25,8 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
   const wrongUse = wrongParamMessage.bind(null, name, paramsString)
 
   return () => {
-    execution.beginBlockOperation(fnName)
+    const meta = { view: '' }
+    execution.beginBlockOperation(fnName, meta)
 
     if (Machine.isEmpty()) {
       throw new Error(wrongUse('nothing!'))
@@ -62,7 +63,9 @@ export function makePureFn<const Ts extends readonly Token.LiteralType[], Vs ext
         break
     }
 
-    Machine.push(make(expr(values as unknown as Vs)))
+    const value = make(expr(values as unknown as Vs))
+    Machine.push(value)
+    meta.view = `${debugExpr(values as unknown as Vs)}: ${Token.printLiteral(value)}`
     execution.endBlockOperation();
   }
 }

@@ -1,7 +1,6 @@
 import type { Computer } from '../compute'
 import { execution } from '../executionGraph'
 import * as Machine from '../machine'
-import { output } from '../output'
 import * as Token from '../tokens'
 import { makeEndBlockEffect } from './utils'
 
@@ -43,7 +42,8 @@ export function IF(computer: Computer) {
     throw new Error(`Unterminated if condition!`)
   }
 
-  execution.beginBlockOperation('IF')
+  const meta = { view: '' }
+  execution.beginBlockOperation('IF', meta)
 
   const flagTok = Machine.pop()
 
@@ -52,6 +52,7 @@ export function IF(computer: Computer) {
   }
 
   const flag = flagTok.value
+  meta.view = flag.toString()
 
   const registerFinishEffect = (tokens: Array<Token.Token>) => {
     tokens.push(

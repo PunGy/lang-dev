@@ -4,6 +4,10 @@ import * as Token from "../tokens";
 function formatMetaEntry(key: string, value: any) {
   let v;
 
+  if (key === 'view') {
+    return value
+  }
+
   if (Token.isToken(value)) {
     if (Token.isLiteral(value)) {
       return Token.printLiteral(value)

@@ -17,19 +17,24 @@ export function drop() {
 
 // (n -- n n)
 export function dup() {
-  execution.beginBlockOperation('DUP')
+  const meta = { view: '' }
+  execution.beginBlockOperation('DUP', meta)
   const token = Machine.peek()
   if (token === undefined) {
     throw new Error('DUP: cannot duplicate empty stack!')
   }
   execution.operation('PEEK', { token })
   Machine.push(token)
+
+  const lit = Token.printLiteral(token)
+  meta.view = `[${lit}] -> [${lit} ${lit}]`
   execution.endBlockOperation()
 }
 
 // (n1 n2 -- n2 n1)
 export function swap() {
-  execution.beginBlockOperation('SWAP')
+  const meta = { view: '' }
+  execution.beginBlockOperation('SWAP', meta)
 
   const n2 = Machine.pop()
   if (n2 === undefined) {
@@ -42,12 +47,17 @@ export function swap() {
 
   Machine.push(n2)
   Machine.push(n1)
+
+  const lit1 = Token.printLiteral(n1),
+        lit2 = Token.printLiteral(n2)
+  meta.view = `[${lit1} ${lit2}] -> [${lit2} ${lit1}]`
   execution.endBlockOperation()
 }
 
 // ( n1 n2 -- n1 n2 n1 )
 export function over() {
-  execution.beginBlockOperation('OVER')
+  const meta = { view: '' }
+  execution.beginBlockOperation('OVER', meta)
 
   const n2 = Machine.pop()
   if (n2 === undefined) {
@@ -61,6 +71,10 @@ export function over() {
   Machine.push(n1)
   Machine.push(n2)
   Machine.push(n1)
+
+  const lit1 = Token.printLiteral(n1),
+        lit2 = Token.printLiteral(n2)
+  meta.view = `[${lit1} ${lit2}] -> [${lit1} ${lit2} ${lit1}]`
   execution.endBlockOperation()
 }
 
