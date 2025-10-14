@@ -184,6 +184,72 @@ html,body, input {
   cursor: pointer;
 }
 
+/**
+* Documentation tab
+*/
+
+#docs {
+  padding: 1.5rem 1rem;
+  text-align: left;
+}
+#docs h2, #docs h3 {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  padding: 0;
+}
+#docs h2 {
+  font-size: 1.25em;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.75rem;
+  margin-bottom: 2rem;
+}
+#docs h3 {
+  font-size: 1.1em;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.doc-item {
+  margin-bottom: 1.75rem;
+}
+.doc-item dt {
+  font-weight: 700;
+  font-size: 1em;
+}
+.doc-item dd {
+  margin-left: 2ch; /* Indent descriptions */
+  margin-top: 0.25rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+.doc-item dd.stack-effect {
+  margin-top: 0.5rem;
+}
+.doc-item dd.example {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 0.5rem;
+  margin-left: 0;
+  background-color: #2b2b2b;
+  padding-left: 1rem;
+  padding: 0.5em;
+}
+
+#docs code {
+  color: rgba(255, 255, 255, 0.90);
+}
+
+#docs pre {
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+#docs > p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

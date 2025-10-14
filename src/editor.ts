@@ -57,6 +57,12 @@ export function initEditor(): Editor {
           output.showTrace();
         }
         break
+      case 'KeyH':
+        if (e.ctrlKey) {
+          e.preventDefault()
+          output.showDocs();
+        }
+        break
     }
   });
 

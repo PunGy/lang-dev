@@ -12,6 +12,7 @@ export interface Output {
 
   showTrace(): void;
   showOutput(): void;
+  showDocs(): void;
 
   restore(): void;
 }
@@ -21,41 +22,76 @@ const PERSISTENCE_KEY = 'tab-state'
 export const initOutput = (): Output => {
   const tracePanel = document.getElementById('trace')
   const outputPanel = document.getElementById('output')
+  const docsPanel = document.getElementById('docs')
 
-  if (!outputPanel) {
-    throw new Error('No output in the application!')
-  }
-  if (!tracePanel) {
-    throw new Error('No trace block in the application!')
+  if (!outputPanel
+    ||!docsPanel
+    ||!tracePanel
+    ) {
+    throw new Error('No panels!')
   }
 
   const traceButton = document.getElementById('trace-tab')
   const outputButton = document.getElementById('output-tab')
-  if (!traceButton || !outputButton) {
+  const docsButton = document.getElementById('docs-tab')
+  if (!traceButton
+    ||!outputButton
+    ||!docsButton
+    ) {
     throw new Error('No tab buttons!')
   }
 
+  let active = {
+    button: traceButton,
+    panel: tracePanel,
+  }
+
+  const clearActive = () => {
+    active.panel.classList.remove('active')
+    active.button.classList.remove('active')
+  }
+
   const showTrace = () => {
+    clearActive()
+
     tracePanel.classList.add('active')
     traceButton.classList.add('active')
-
-    outputPanel.classList.remove('active')
-    outputButton.classList.remove('active')
+    active = {
+      button: traceButton,
+      panel: tracePanel,
+    }
     localStorage.setItem(PERSISTENCE_KEY, 'trace')
   }
   const showOutput = () => {
-    tracePanel.classList.remove('active')
-    traceButton.classList.remove('active')
-
+    clearActive()
     outputPanel.classList.add('active')
     outputButton.classList.add('active')
+    active = {
+      button: outputButton,
+      panel: outputPanel,
+    }
+
     localStorage.setItem(PERSISTENCE_KEY, 'output')
+  }
+  const showDocs = () => {
+    clearActive()
+    docsPanel.classList.add('active')
+    docsButton.classList.add('active')
+    active = {
+      button: docsButton,
+      panel: docsPanel,
+    }
+
+    localStorage.setItem(PERSISTENCE_KEY, 'docs')
   }
   traceButton.addEventListener('click', () => {
     showTrace()
   })
   outputButton.addEventListener('click', () => {
     showOutput()
+  })
+  docsButton.addEventListener('click', () => {
+    showDocs()
   })
 
   let outputBuffer = ''
@@ -105,14 +141,20 @@ export const initOutput = (): Output => {
     restore() {
       const state = localStorage.getItem(PERSISTENCE_KEY)
 
-      if (state === 'trace') {
-        showTrace()
-      } else if (state === 'output') {
-        showOutput()
+      switch (state) {
+        case 'trace':
+          return showTrace()
+        case 'output':
+          return showOutput()
+        case 'docs':
+          return showDocs()
+        default:
+          return showDocs()
       }
     },
     showTrace,
     showOutput,
+    showDocs,
   }
 }
 

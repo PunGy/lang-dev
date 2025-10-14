@@ -211,10 +211,12 @@ export function initToolbar(): Toolbar {
     saveActiveFileName(fileInput.value)
   })
 
-  fileDropdown.addEventListener('click', ({ target }) => {
+  fileDropdown.addEventListener('click', (event) => {
+    const { target } = event
     if (!target || !isHTMLElement(target)) {
       return
     }
+    event.stopPropagation()
 
     let file: string;
     if (target === newFileButton) {
@@ -231,6 +233,7 @@ export function initToolbar(): Toolbar {
 
       makeFile(file)
       setActiveFile(file)
+      hideDropdown()
     } else if (target.classList.contains('close-button')) {
       // remove file
       file = target.parentElement?.dataset.file!
@@ -281,10 +284,7 @@ export function initToolbar(): Toolbar {
     fileDropdown.classList.remove('show')
   }
 
-  document.addEventListener('click', ({ target }) => {
-    if (target && isHTMLElement(target) && fileDropdownToggle.contains(target)) {
-      return
-    }
+  document.addEventListener('click', () => {
     hideDropdown()
   })
 

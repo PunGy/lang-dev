@@ -57,12 +57,229 @@
       </div>
       <div id="output-container" class="container">
         <div id="tabs">
-          <div class="tab active" id="trace-tab">Trace</div>
+          <div class="tab" id="trace-tab">Trace</div>
           <div class="tab" id="output-tab">Output</div>
+          <div class="tab" id="docs-tab">Help</div>
         </div>
         <div id="panels">
           <div class="output-panel active" id="trace"></div>
           <div class="output-panel" id="output"></div>
+          <div class="output-panel" id="docs">
+            <h2>Language Documentation</h2>
+            <a href="https://github.com/pungy/lang-dev">Github</a>
+            <p>
+              A stack-based language. Words consume values from the stack and push results back.
+            </p>
+            <ul>
+              <li>Case of words does not count, <code>dup</code> and <code>DUP</code> are the same.</li>
+              <li>The notation <code>( before -- after )</code> shows a word's effect on the stack.</li>
+            </ul>
+
+            <h3>Editor</h3>
+            During typing, following shortcuts are working.
+            <dl class="doc-item">
+              <dt><code>CTRL+S</code></dt>
+              <dd>Run code.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>CTRL+I</code></dt>
+              <dd>Show trace tab.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>CTRL+O</code></dt>
+              <dd>Show output tab.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>CTRL+H</code></dt>
+              <dd>Show help tab.</dd>
+            </dl>
+
+            <h3>Comments</h3>
+            <dl class="doc-item">
+              <dt><code>(...)</code></dt>
+              <dd>Block scoped comment.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>\ ...</code></dt>
+              <dd>Comment to the end of the line.</dd>
+            </dl>
+
+            <h3>Numeric Operations</h3>
+            <dl class="doc-item">
+              <dt><code>+</code></dt>
+              <dd class="stack-effect"><code>( n1 n2 -- n1+n2 )</code></dd>
+              <dd>Adds the top two numbers.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>-</code></dt>
+              <dd class="stack-effect"><code>( n1 n2 -- n1-n2 )</code></dd>
+              <dd>Subtracts the top number from the second.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>*</code></dt>
+              <dd class="stack-effect"><code>( n1 n2 -- n1*n2 )</code></dd>
+              <dd>Multiplies the top two numbers.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>/</code></dt>
+              <dd class="stack-effect"><code>( n1 n2 -- n1/n2 )</code></dd>
+              <dd>Divides the second number by the top one.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>= > &lt;</code></dt>
+              <dd class="stack-effect"><code>( n1 n2 -- bool )</code></dd>
+              <dd>Pushes <code>true</code> or <code>false</code> after comparison.</dd>
+            </dl>
+
+            <h3>String Operations</h3>
+            <dl class="doc-item">
+              <dt><code>'+</code></dt>
+              <dd class="stack-effect"><code>( s1 s2 -- s1s2 )</code></dd>
+              <dd>Concatenates two strings.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>'*</code></dt>
+              <dd class="stack-effect"><code>( s n -- s*n )</code></dd>
+              <dd>Repeats a string <code>n</code> times.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>'=</code></dt>
+              <dd class="stack-effect"><code>( s1 s2 -- s1=s2 )</code></dd>
+              <dd>String comparison, returns boolean.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>'LEN</code></dt>
+              <dd class="stack-effect"><code>( s -- n )</code></dd>
+              <dd>String length, returns number.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>'I</code></dt>
+              <dd class="stack-effect"><code>( s n -- s[n] )</code></dd>
+              <dd>Char at index, returns string.</dd>
+            </dl>
+
+            <h3>Boolean Logic</h3>
+            <dl class="doc-item">
+              <dt><code>NOT</code></dt>
+              <dd class="stack-effect"><code>( bool -- !bool )</code></dd>
+              <dd>Inverts a boolean value.</dd>
+            </dl>
+
+            <h3>Stack Manipulation</h3>
+            <dl class="doc-item">
+              <dt><code>DUP</code></dt>
+              <dd class="stack-effect"><code>( a -- a a )</code></dd>
+              <dd>Duplicates the top stack item.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>DROP</code></dt>
+              <dd class="stack-effect"><code>( a -- )</code></dd>
+              <dd>Removes the top stack item.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>SWAP</code></dt>
+              <dd class="stack-effect"><code>( a b -- b a )</code></dd>
+              <dd>Swaps the top two stack items.</dd>
+              <dd></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>OVER</code></dt>
+              <dd class="stack-effect"><code>( a b -- a b a )</code></dd>
+              <dd>Copies the second item to the top. Used for making a computation over two values without loosing them.</dd>
+              <dd class="example">
+<pre>5 9 over over > .s
+
+--- PRINT-STACK ---
+[0]: false
+[1]: 9
+[2]: 5
+---</pre>
+              </dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>PICK</code></dt>
+              <dd class="stack-effect"><code>( .. xn..x0 n -- ..xn..x0 xn )</code></dd>
+              <dd>Copies the n-th item (0-indexed) to the top.</dd>
+              <dd class="example">
+<pre>20 15 10 .s
+(
+[0]: 10
+[1]: 15
+[2]: 20 &lt;---
+)
+2 pick .s
+(
+[0]: 20 &lt;---
+[1]: 10
+[2]: 15
+[3]: 20
+)</pre>
+              </dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>EMPTY?</code></dt>
+              <dd class="stack-effect"><code>( -- bool )</code></dd>
+              <dd>Pushes <code>boolean</code> if the stack is empty.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>STACK-LEN</code></dt>
+              <dd class="stack-effect"><code>( -- len )</code></dd>
+              <dd>Pushes the current stack depth.</dd>
+            </dl>
+
+            <h3>Printing & Output</h3>
+            <dl class="doc-item">
+              <dt><code>.</code></dt>
+              <dd class="stack-effect"><code>( a -- )</code></dd>
+              <dd>Pops and prints the top value.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>.p</code> or <code>PRINT</code></dt>
+              <dd class="stack-effect"><code>( a -- a )</code></dd>
+              <dd>Prints the top value without affecting stack.</dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>.s</code> or <code>PRINT-STACK</code></dt>
+              <dd class="stack-effect"><code>( -- )</code></dd>
+              <dd>Prints the entire stack non-destructively.</dd>
+            </dl>
+
+            <h3>Definitions & Control Flow</h3>
+            <dl class="doc-item">
+              <dt><code>: &lt;name&gt; ... ;</code></dt>
+              <dd>Defines a new word.</dd>
+              <dd class="example">
+<pre>: SQUARE DUP * ;
+5 SQUARE . ( prints 25 )</pre>
+              </dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>&lt;cond&gt; IF ... THEN</code></dt>
+              <dt><code>&lt;cond&gt; IF ... ELSE ... THEN</code></dt>
+              <dd>Conditional branching.</dd>
+              <dd class="example">
+<pre>5 3 &gt; IF "Bigger" . THEN
+\OUTPUT: "Bigger"
+
+3 5 &gt; IF "Bigger" ELSE "Lesser" THEN .
+\OUTPUT: "Lesser"
+</pre>
+              </dd>
+            </dl>
+            <dl class="doc-item">
+              <dt><code>BEGIN ... &lt;cond&gt; UNTIL</code></dt>
+              <dd>Loops until the condition is true.</dd>
+              <dd class="example">
+<pre>( Counts 0 to 4 )
+0
+BEGIN
+  DUP . 1 +
+  DUP 5 =
+UNTIL
+
+\OUTPUT: 0 1 2 3 4</pre></dd>
+            </dl>
+          </div>
         </div>
       </div>
     </div>
