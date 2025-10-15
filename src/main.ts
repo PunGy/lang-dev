@@ -5,6 +5,7 @@ import './style.css'
 import { toolbar } from './toolbar'
 import { editor } from './editor'
 import { output } from './output'
+import './layout'
 
 Machine.init()
 

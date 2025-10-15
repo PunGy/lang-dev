@@ -24,11 +24,26 @@ html,body, input {
 
 #app {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 5px 1fr;
   width: 100vw;
   height: 100vh;
-  gap: 5px;
   padding: 5px;
+  overflow: hidden;
+}
+
+#container-separator {
+  cursor: ew-resize;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+#container-separator.is-dragging {
+  background-color: #007bff;
+}
+
+body.is-resizing {
+  cursor: ew-resize;
+  user-select: none;
 }
 
 .container {
@@ -38,6 +53,8 @@ html,body, input {
   padding: 5px;
   max-height: 100vh;
   overflow-y: auto;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 #editor {
   font-size: 1.2rem;
