@@ -17,6 +17,7 @@ export function run() {
 
   try {
     const tokens = lexer(code)
+    console.log('TOKENS:', tokens)
 
     // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
     const computer = new Computer(tokens)
@@ -30,7 +31,7 @@ export function run() {
     }
   }
 
-  console.log(execution.graph())
+  console.log('GRAPH:', execution.graph())
   output.trace(prettyPrintGraph(execution.graph()))
   output.flush()
 }
