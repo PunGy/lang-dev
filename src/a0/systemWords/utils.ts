@@ -3,7 +3,7 @@
  */
 import * as Token from '../tokens'
 import * as Machine from '../machine'
-import { execution } from '../executionGraph'
+import { execution } from "../execution"
 
 export function wrongParamMessage(word: string, paramMessage: string, got: string) {
   return `${word}: require ${paramMessage} on top of stack! Got: ${got}`

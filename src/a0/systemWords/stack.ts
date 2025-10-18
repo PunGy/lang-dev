@@ -5,7 +5,7 @@
 import * as Machine from '../machine'
 import * as Token from '../tokens'
 import { printTypes, wrongParamMessage } from './utils'
-import { execution } from '../executionGraph'
+import { execution } from '../execution'
 
 // (n -- )
 export function drop() {

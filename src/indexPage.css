@@ -1,0 +1,55 @@
+:root {
+  font-family: "Fira Code", monospace, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  border-color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,body, input {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 50px;
+  height: 100vh;
+}
+#app {
+  display: flex;
+  width: 100vw;
+  align-items: center;
+  justify-content: center;
+}
+#footer {
+  width: 100vw;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#app > a {
+  display: block;
+  text-align: center;
+  width: 300px;
+  padding: 30px;
+  border: 1px solid #afafaf;
+  color: rgba(255, 255, 255, 0.87);
+  transition: all 0.2s ease;
+}
+#app > a:hover {
+  color: rgb(255, 255, 255);
+  border-color: #fff;
+}

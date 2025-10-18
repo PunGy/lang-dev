@@ -1,8 +1,8 @@
 import * as Token from './tokens'
-import { output } from './output'
+import { output } from '../output'
 import { initMetaWords } from './metaWords/words'
 import { initSystemWords } from './systemWords/words'
-import { execution } from './executionGraph'
+import { execution } from './execution'
 
 type Token = Token.Literal
 

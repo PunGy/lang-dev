@@ -1,32 +1,14 @@
 import { gtAnchor, gtBlock, gtOperation, type GraphAnchorNode, type GraphNode, type NodeMeta } from "../executionGraph";
-import * as Token from "../tokens";
 
-function formatMetaEntry(key: string, value: any) {
-  let v;
+type Formatter = (key: string, value: any) => string;
 
-  if (key === 'view') {
-    return value
-  }
-
-  if (Token.isToken(value)) {
-    if (Token.isLiteral(value)) {
-      return Token.printLiteral(value)
-    } else {
-      v = Token.print(value)
-    }
-  } else {
-    v = JSON.stringify(value)
-  }
-
-  return `${key}: ${v}`
-}
-function formatMeta(meta: NodeMeta): string {
+function formatMeta(meta: NodeMeta, formatter: Formatter): string {
   if (!meta || Object.keys(meta).length === 0) {
     return '';
   }
 
   const entries = Object.entries(meta)
-  .map(([key, value]) => formatMetaEntry(key, value))
+  .map(([key, value]) => formatter(key, value))
   .join(', ');
 
   return ` (${entries})`;
@@ -39,7 +21,7 @@ function formatMeta(meta: NodeMeta): string {
  * @param level The current indentation level for hierarchical display.
  * @returns An array of strings representing the graph segment.
  */
-function walkGraph(node: GraphNode | null, level: number): string[] {
+function walkGraph(node: GraphNode | null, level: number, formatter: Formatter): string[] {
   if (!node) {
     return [];
   }
@@ -49,7 +31,7 @@ function walkGraph(node: GraphNode | null, level: number): string[] {
 
   while (currentNode) {
     const indentation = '   '.repeat(level); // 3 spaces for clear indentation
-    const metaString = formatMeta(currentNode.meta);
+    const metaString = formatMeta(currentNode.meta, formatter);
 
     switch (currentNode.type) {
       case gtOperation:
@@ -61,7 +43,7 @@ function walkGraph(node: GraphNode | null, level: number): string[] {
         output.push(`${indentation}┌ ${currentNode.name}${metaString}`);
 
         // Recursively process the children at the next indentation level
-        const childLines = walkGraph(currentNode.children, level + 1);
+        const childLines = walkGraph(currentNode.children, level + 1, formatter);
 
         // Prepend each child line with a vertical bar to show connection
         childLines.forEach(line => {
@@ -94,14 +76,14 @@ function walkGraph(node: GraphNode | null, level: number): string[] {
  * @param anchorNode The root anchor node of the graph. The anchor itself is not printed.
  * @returns A multi-line string visualizing the computation flow.
  */
-export function prettyPrintGraph(anchorNode: GraphAnchorNode): string {
+export function prettyPrintGraph(anchorNode: GraphAnchorNode, formatter: Formatter): string {
   if (!anchorNode || anchorNode.type !== gtAnchor) {
     console.error("Invalid input: An anchor node is required.");
     return "[Invalid Graph Input]";
   }
 
   // The actual computation starts from the node *after* the anchor.
-  const lines = walkGraph(anchorNode.next, 0);
+  const lines = walkGraph(anchorNode.next, 0, formatter);
 
   if(lines.length === 0) {
     return "[Empty Computation Graph]";

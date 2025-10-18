@@ -65,7 +65,7 @@ const makeAnchor = (): GraphAnchorNode => ({
   parent: null,
 })
 
-function initExecutionGraph() {
+export function initExecutionGraph() {
   let anchor = makeAnchor()
   let target: GraphNode = anchor;
 
@@ -109,6 +109,4 @@ function initExecutionGraph() {
 
   return maker
 }
-
-export const execution = initExecutionGraph()
 

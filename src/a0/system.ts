@@ -3,12 +3,13 @@
  */
 
 import { Computer } from "./compute"
-import { editor } from "./editor"
+import { editor } from "../editor"
 import { lexer } from "./lexer"
-import { output } from "./output"
+import { output } from "../output"
 import * as Machine from './machine'
-import { execution } from "./executionGraph"
-import { prettyPrintGraph } from "./lib/graphPrinter"
+import { execution } from './execution'
+import { prettyPrintGraph } from "../lib/graphPrinter"
+import { formatMetaEntry } from "./lib/graphFormatter"
 
 export function run() {
   const code = editor.content
@@ -32,6 +33,6 @@ export function run() {
   }
 
   console.log('GRAPH:', execution.graph())
-  output.trace(prettyPrintGraph(execution.graph()))
+  output.trace(prettyPrintGraph(execution.graph(), formatMetaEntry))
   output.flush()
 }

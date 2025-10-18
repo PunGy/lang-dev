@@ -1,12 +1,16 @@
 import { toolbar } from './toolbar'
 import { output } from './output';
-import * as System from './system'
+
+type System = {
+  run(): void;
+}
 
 export interface Editor {
   readonly content: string;
   onChange(fn: (content: string) => void): () => void;
   restore(): void;
   focus(): void;
+  initSystem(system: System): void;
 }
 
 export function initEditor(): Editor {
@@ -41,7 +45,7 @@ export function initEditor(): Editor {
       case 'KeyS':
         if (e.ctrlKey) {
           e.preventDefault()
-          System.run()
+          system.run()
           return
         }
         break
@@ -66,6 +70,7 @@ export function initEditor(): Editor {
     }
   });
 
+  let system: System = { run() {}  }
   const editor: Editor = {
     get content() {
       return getContent()
@@ -89,6 +94,10 @@ export function initEditor(): Editor {
     },
     focus() {
       editorElem.focus()
+    },
+
+    initSystem(s) {
+      system = s
     },
   }
 

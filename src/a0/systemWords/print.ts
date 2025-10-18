@@ -4,8 +4,8 @@
 
 import * as Machine from '../machine'
 import * as Token from '../tokens'
-import { output } from '../output'
-import { execution } from '../executionGraph'
+import { output } from '../../output'
+import { execution } from '../execution'
 
 /**
  * Side effect output
