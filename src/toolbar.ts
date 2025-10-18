@@ -1,3 +1,5 @@
+import type { System } from "./system";
+
 export enum ProgramState {
   READY = 'ready',
   RUNNING = 'running',
@@ -22,7 +24,7 @@ function isHTMLElement(obj: unknown): obj is HTMLElement {
 export const ACTIVE_FILE = 'active-file'
 const FILES = 'files'
 
-export function initToolbar(): Toolbar {
+export function initToolbar(system: System): Toolbar {
   const toolbarElem = document.getElementById('toolbar')
   const startButton = document.getElementById('start-button')
   const stopButton = document.getElementById('stop-button')
@@ -87,11 +89,15 @@ export function initToolbar(): Toolbar {
     },
 
     getActiveFileState() {
-      return localStorage.getItem(`file-${activeFile}`)
+      return localStorage.getItem(prefixed(`file-${activeFile}`))
     },
     setActiveFileState(content) {
-      localStorage.setItem(`file-${activeFile}`, content)
+      localStorage.setItem(prefixed(`file-${activeFile}`), content)
     },
+  }
+
+  const prefixed = (req: string) => {
+    return `${system.name}/${req}`
   }
 
   const hideStart = () => {
@@ -121,29 +127,29 @@ export function initToolbar(): Toolbar {
     }
     text.innerText = newFile
     elem.dataset.file = newFile
-    const oldId = `file-${oldFile}`
+    const oldId = prefixed(`/file-${oldFile}`)
     const content = localStorage.getItem(oldId)
     if (content === null) {
       throw new Error(`No content for ${oldFile}`)
     }
     localStorage.removeItem(oldId)
-    localStorage.setItem(`file-${newFile}`, content)
+    localStorage.setItem(prefixed(`/file-${newFile}`), content)
 
     files.delete(oldFile)
     files.set(newFile, elem)
     syncFiles()
   }
   const setActiveFile = (file: string) => {
-    activeFile = file 
+    activeFile = file
     fileInput.value = file
-    localStorage.setItem(ACTIVE_FILE, file)
+    localStorage.setItem(prefixed(ACTIVE_FILE), file)
   }
   const saveActiveFileName = (newName: string) => {
     updateFile(activeFile, newName)
     setActiveFile(newName)
   }
   const makeFile = (file: string) => {
-    const fileId = `file-${file}`
+    const fileId = prefixed(`file-${file}`)
     if (!files.has(file)) {
       files.set(file, null)
     }
@@ -175,10 +181,10 @@ export function initToolbar(): Toolbar {
 
     files.get(file)!.remove()
     files.delete(file)
-    localStorage.removeItem(`file-${file}`)
+    localStorage.removeItem(prefixed(`/file-${file}`))
   }
   const initializeFiles = () => {
-    const list = localStorage.getItem(FILES)?.split('<|>') ?? []
+    const list = localStorage.getItem(prefixed(FILES))?.split('<|>') ?? []
     const map = new Map<string, HTMLElement | null>()
     list.forEach(file => {
       map.set(file, null)
@@ -191,10 +197,10 @@ export function initToolbar(): Toolbar {
   }
 
   const syncFiles = () => {
-    localStorage.setItem(FILES, serializeFiles())
+    localStorage.setItem(prefixed(FILES), serializeFiles())
   }
 
-  let activeFile = localStorage.getItem(ACTIVE_FILE)!
+  let activeFile = localStorage.getItem(prefixed(ACTIVE_FILE))!
   const files = initializeFiles()
 
   if (!activeFile) {
@@ -321,4 +327,3 @@ export function initToolbar(): Toolbar {
   return toolbar
 }
 
-export const toolbar = initToolbar()

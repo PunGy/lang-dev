@@ -63,7 +63,7 @@ export function isToken(obj: any): obj is Token {
 
 export const print = (token: Token): string => {
   switch (token.type) {
-    case tword: return `[VAR: "${token.name}"]`
+    case tword: return `[VAR: "${token.word}"]`
     case tnewline: return `[NEWLINE]`
     case tdot: return `[DOT]`
     case tlambda: return `[LAMBDA]`

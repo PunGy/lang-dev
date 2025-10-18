@@ -1,9 +1,5 @@
-import { toolbar } from './toolbar'
 import { output } from './output';
-
-type System = {
-  run(): void;
-}
+import type { System } from './system';
 
 export interface Editor {
   readonly content: string;
@@ -13,7 +9,7 @@ export interface Editor {
   initSystem(system: System): void;
 }
 
-export function initEditor(): Editor {
+export function initEditor(system: System): Editor {
   const editorElem = document.getElementById('editor')
 
   if (!editorElem) {
@@ -70,7 +66,6 @@ export function initEditor(): Editor {
     }
   });
 
-  let system: System = { run() {}  }
   const editor: Editor = {
     get content() {
       return getContent()
@@ -86,7 +81,10 @@ export function initEditor(): Editor {
       }
     },
     restore() {
-      const content = toolbar.getActiveFileState()
+      if (!system) {
+        return
+      }
+      const content = system.getActiveFile()
 
       if (content !== null) {
         editorElem.innerText = content
@@ -103,10 +101,10 @@ export function initEditor(): Editor {
 
   editorElem.addEventListener('input', () => {
     const content = editor.content
-    toolbar.setActiveFileState(content)
+    system.setActiveFileState(content)
   })
 
-  toolbar.onFileChange(() => {
+  system.onFileChange(() => {
     editor.restore()
   })
 
@@ -115,4 +113,3 @@ export function initEditor(): Editor {
   return editor
 }
 
-export const editor = initEditor()
