@@ -2,6 +2,10 @@ interface BaseToken {
   type: symbol;
 }
 
+/**
+ * Lexical tokens
+ */
+
 export const tword = Symbol('word')
 export interface Word extends BaseToken {
   type: typeof tword;
@@ -60,6 +64,39 @@ const tokensSet = new Set([tword, tdot, topenParen, tcloseParen, tcomment, tnewl
 export function isToken(obj: any): obj is Token {
   return obj instanceof Object && typeof obj.type === 'symbol' && tokensSet.has(obj.type)
 }
+
+/**
+ * AST tokens
+ */
+
+
+export const tvar = Symbol('var')
+export interface Variable extends BaseToken {
+  type: typeof tvar;
+  name: Word;
+}
+export const makeVariable = (name: Word): Variable =>
+  ({ type: tvar, name })
+
+export const tabstraction = Symbol('abstraction')
+export interface Abstraction extends BaseToken {
+  type: typeof tabstraction;
+  arg: Variable;
+  expr: Expression;
+}
+export const makeAbstraction = (arg: Variable, expr: Expression): Abstraction =>
+  ({ type: tabstraction, arg, expr })
+
+export const tapply = Symbol('application')
+export interface Application extends BaseToken {
+  type: typeof tapply;
+  func: Expression;
+  arg: Expression;
+}
+export const makeApplication = (func: Expression, arg: Expression): Application =>
+  ({ type: tapply, func, arg })
+
+export type Expression = Variable | Abstraction | Application
 
 export const print = (token: Token): string => {
   switch (token.type) {

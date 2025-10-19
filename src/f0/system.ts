@@ -8,6 +8,7 @@ import { execution } from './execution'
 import { initEditor, type Editor } from "../editor"
 import { initToolbar, type Toolbar } from "../toolbar"
 import type { System as ISystem } from '../system'
+import { parse } from "./parser"
 
 export class System implements ISystem {
   name = 'f0'
@@ -61,6 +62,8 @@ export class System implements ISystem {
     try {
       const tokens = lexer(code)
       console.log('TOKENS:', tokens)
+      const expression = parse(tokens)
+      console.log('EXPRESSION:', expression)
 
       // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
       // const computer = new Computer(tokens)
