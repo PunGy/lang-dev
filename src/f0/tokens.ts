@@ -98,7 +98,7 @@ export const makeApplication = (func: Expression, arg: Expression): Application 
 
 export type Expression = Variable | Abstraction | Application
 
-export const print = (token: Token): string => {
+export const tokenInfo = (token: Token): string => {
   switch (token.type) {
     case tword: return `[VAR: "${token.word}"]`
     case tnewline: return `[NEWLINE]`
@@ -109,3 +109,52 @@ export const print = (token: Token): string => {
     case tcomment: return `[COMMENT: "${token.comment}"]`
   }
 }
+
+export const printToken = (token: Token): string => {
+  switch (token.type) {
+    case tword: return token.word
+    case tnewline: return ''
+    case tdot: return '.'
+    case tlambda: return 'λ'
+    case topenParen: return '('
+    case tcloseParen: return ')'
+    case tcomment: return ''
+  }
+}
+
+enum PrintContext {
+  TopLevel,      // The root of the expression, or inside an abstraction body
+  App_Function,  // The expression is the 'func' part of an application
+  App_Argument,  // The expression is the 'arg' part of an application
+}
+export const printExpression = (
+  expr: Expression,
+  context: PrintContext = PrintContext.TopLevel
+): string => {
+  switch (expr.type) {
+    case tvar:
+      return expr.name.word
+
+    case tabstraction: {
+      const body = printExpression(expr.expr, PrintContext.TopLevel)
+
+      if (context === PrintContext.App_Function || context === PrintContext.App_Argument) {
+        return `(λ${expr.arg.name.word}.${body})`
+      } else {
+        return `λ${expr.arg.name.word}.${body}`
+      }
+    }
+
+    case tapply: {
+      const func = printExpression(expr.func, PrintContext.App_Function)
+      const arg = printExpression(expr.arg, PrintContext.App_Argument)
+
+      if (context === PrintContext.App_Argument) {
+        return `(${func} ${arg})`
+      } else {
+        return `${func} ${arg}`
+      }
+    }
+  }
+}
+

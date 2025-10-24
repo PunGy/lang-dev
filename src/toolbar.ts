@@ -127,13 +127,13 @@ export function initToolbar(system: System): Toolbar {
     }
     text.innerText = newFile
     elem.dataset.file = newFile
-    const oldId = prefixed(`/file-${oldFile}`)
+    const oldId = prefixed(`file-${oldFile}`)
     const content = localStorage.getItem(oldId)
     if (content === null) {
       throw new Error(`No content for ${oldFile}`)
     }
     localStorage.removeItem(oldId)
-    localStorage.setItem(prefixed(`/file-${newFile}`), content)
+    localStorage.setItem(prefixed(`file-${newFile}`), content)
 
     files.delete(oldFile)
     files.set(newFile, elem)
@@ -181,7 +181,7 @@ export function initToolbar(system: System): Toolbar {
 
     files.get(file)!.remove()
     files.delete(file)
-    localStorage.removeItem(prefixed(`/file-${file}`))
+    localStorage.removeItem(prefixed(`file-${file}`))
   }
   const initializeFiles = () => {
     const list = localStorage.getItem(prefixed(FILES))?.split('<|>') ?? []

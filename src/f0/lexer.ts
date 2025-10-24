@@ -89,7 +89,7 @@ export function lexer(code: string): Array<Token.Token> {
         consume()
         break
       default:
-        tokens.push(Token.makeWord(consume()!))
+        readWord()
         break
     }
   }

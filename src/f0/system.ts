@@ -7,8 +7,19 @@ import { output } from "../output"
 import { execution } from './execution'
 import { initEditor, type Editor } from "../editor"
 import { initToolbar, type Toolbar } from "../toolbar"
+import * as Token from './tokens'
+import * as Computer from './computer'
 import type { System as ISystem } from '../system'
 import { parse } from "./parser"
+import { prettyPrintGraph } from "../lib/graphPrinter"
+
+export function formatMetaEntry(key: string, value: any) {
+  if (key === 'expression') {
+    return Token.printExpression(value)
+  }
+
+  return `${key}: ${value}`
+}
 
 export class System implements ISystem {
   name = 'f0'
@@ -60,15 +71,15 @@ export class System implements ISystem {
 
 
     try {
-      const tokens = lexer(code)
+      const tokens = lexer(code.trim())
       console.log('TOKENS:', tokens)
       const expression = parse(tokens)
       console.log('EXPRESSION:', expression)
 
-      // output.print(tokens.map(token => Token.print(token)).toString() + "\n\n")
-      // const computer = new Computer(tokens)
+      output.traceln('--- Expression ---')
+      output.traceln(Token.printExpression(expression))
       // Machine.clear()
-      // computer.run()
+      Computer.run(expression)
     } catch(err) {
       if (err instanceof Error) {
         output.uniln(err.toString())
@@ -78,7 +89,7 @@ export class System implements ISystem {
     }
 
     // console.log('GRAPH:', execution.graph())
-    // output.trace(prettyPrintGraph(execution.graph(), formatMetaEntry))
+    output.trace(prettyPrintGraph(execution.graph(), formatMetaEntry))
     output.flush()
   }
 }
