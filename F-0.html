@@ -74,11 +74,6 @@
             <p>
               Untyped-Lambda calculus implementation
             </p>
-            <ul>
-              <li>Case of words does not count, <code>dup</code> and <code>DUP</code> are the same.</li>
-              <li>The notation <code>( before -- after )</code> shows a word's effect on the stack.</li>
-            </ul>
-
             <h3>Editor</h3>
             During typing, following shortcuts are working.
             <dl class="doc-item">
@@ -98,10 +93,55 @@
               <dd>Show help tab.</dd>
             </dl>
 
+            <h3>Application rules</h3>
+            <dl class="doc-item">
+              <dt>Application is left-associative.</dt>
+              <dd><code>f x g x</code> is equal to <code>((f x) g) x</code></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt>Applicaiton of variable-terms separated by whitespace.</dt>
+              <dd><code>f x</code>: apply x to f</dd>
+              <dd><code>ff x</code>: apply x to ff</dd>
+            </dl>
+
+            <h3>Simple form</h3>
+            <dl class="doc-item">
+              <dt>Syntax form</dt>
+              <dd class="example">
+<pre>(\x.(\y.(x))) β= \x.\y.x
+
+(((\x.(\y.(x))) a) b) β= (\x.\y.x) a b
+
+\f.\g.\x.((f x) (g x)) β= \f.\g.\x.f x (g x)</pre>
+              </dd>
+            </dl>
+
             <h3>Comments</h3>
             <dl class="doc-item">
               <dt><code>-- ...</code></dt>
               <dd>Comment to the end of the line.</dd>
+            </dl>
+
+            <h3>Examples</h3>
+            <dl class="doc-item">
+              <dt>I-combinator: <code>\x.x</code></dt>
+              <dd class="example"><pre>(\x.x) a</pre></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt>constant: <code>\y.x</code></dt>
+              <dd class="example"><pre>(\y.x) a</pre></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt>Nested applications</dt>
+              <dd class="example"><pre>(\f.λx.f (f x)) (\y.y z) a</pre></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt>Alpha-convertion</dt>
+              <dd class="example"><pre>(\x.\y.x y) y a</pre></dd>
+            </dl>
+            <dl class="doc-item">
+              <dt>SKK-combinator</dt>
+              <dd class="example"><pre>(\f.\g.\x.f x (g x)) (\x.\y.x) (\x.\y.x) a</pre></dd>
             </dl>
           </div>
         </div>

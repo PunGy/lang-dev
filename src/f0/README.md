@@ -1,12 +1,35 @@
 # Lambda calculus
 
+## Rules
+
+Application
+
+```
+-- apply a to x
+x a
+
+-- NOTE: when used with variables - terms of applications must be seprarated with the whitespace
+-- not application, just a variable `xa`
+xa
+```
+
 Left-associativity
 
 ```
 f a x = ((f a) x)
 ```
 
-## Beta reduction
+Simple-form:
+
+```
+(\x.(\y.(x))) β= \x.\y.x
+
+(((\x.(\y.(x))) a) b) β= (\x.\y.x) a b
+
+\f.\g.\x.((f x) (g x)) β= \f.\g.\x.f x (g x)
+```
+
+### Beta reduction
 
 The β-reduction rule states that an application of the form `(\x.tx)a` would be reduced to the term:
 
@@ -17,10 +40,12 @@ t[x := a] -> ta
 Examples:
 
 ```
+I-combinator
 (\x.x) a
 β: x -> [x := a] = a
 
-(\y.x)a
+constant
+(\y.x) a
 β: x -> [y := a] = x
 
 (((\x.\y.y) a) b)
@@ -31,8 +56,7 @@ Examples:
 SKK combinator
 
 ```
-full: ((((\f.\g.\x.fx(gx)) (\x.\y.x)) (\x.\y.x)) a)
-simplified: (\f.\g.\x.f x (g x)) (\x.\y.x) (\x.\y.x) a
+(\f.\g.\x.f x (g x)) (\x.\y.x) (\x.\y.x) a
 
 β: (\g.\x.f x (g x)) (\x.\y.x) a   ->  [f  := (\x.\y.x)]    = (\g.\x.(\x.\y.x) x (g x)) (\x.\y.x) a
 β: (\x.(\x.\y.x) x (g x)) a        ->  [g  := (\x.\y.x)]    = (\x.(\x.\y.x) x ((\x.\y.x) x)) a
@@ -56,7 +80,7 @@ simplified: (\f.\g.\x.f x (g x)) (\x.\y.x) (\x.\y.x) a
 β: (y z) z                -> [y := a]             = (a z) z
 ```
 
-## Alpha reduction
+### Alpha reduction
 
 Replacement of names which can conflict with each other
 

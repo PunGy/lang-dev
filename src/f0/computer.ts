@@ -94,6 +94,7 @@ function betaRedex(expr: Token.Expression): [reduced: boolean, nextExpression: T
 }
 
 export function run(expr: Token.Expression) {
+  alphaCounter = 0
   let reduced = false
 
   do {
